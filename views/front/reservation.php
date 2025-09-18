@@ -765,6 +765,23 @@
                                                                     </span>
                                                                 </small>
                                                             </div>
+
+                                                            <form action="POST">
+                                                                <h5 class="schedule-title">
+                                                                    <i class="fa-solid fa-calendar-plus"></i> Tarih Aralığı Seçiniz
+                                                                </h5>
+                                                                <div class="row">
+                                                                    <div class="col-5 co-lg-5">
+                                                                        <h6 class="mx-1">Giriş Tarihi</h6>
+                                                                        <input class="form-control" type="date" name="first-sign" id="">
+                                                                    </div>
+                                                                    <div class="col-6 col-lg-5">
+                                                                        <h6 class="mx-1">Çıkış Tarihi</h6>
+                                                                        <input class="form-control" type="date" name="last-sign" id="">
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+
                                                         </div>
                                                     </div>
 
@@ -841,12 +858,12 @@
         document.querySelectorAll('.reservation-button').forEach(function(button) {
             button.addEventListener("click", function(e) {
                 e.preventDefault(); // Link tıklamasını engelle
-                
+
                 const filterallcard = document.querySelector('.filter-card');
                 const filterallcardwh = document.querySelector('.filter-card-wh');
                 const roomContainer = document.querySelector('.col-lg-8.col-xl-9');
                 const filter = document.querySelector('.filtreleme');
-                
+
                 // Tıklanan butonun bulunduğu room-card'ı bul
                 const currentRoomCard = button.closest('.room-card');
                 const currentReservationButton = currentRoomCard.querySelector('.reservation-button');
@@ -854,7 +871,7 @@
                 const currentBigReservation = currentRoomCard.querySelector('.big-reservation');
 
                 filterallcard.classList.add('animate__animated', 'animate__bounceOut');
-                
+
                 setTimeout(() => {
                     filterallcardwh.classList.remove('col-lg-4', 'col-xl-3');
                     filterallcardwh.classList.add('d-none');
@@ -883,7 +900,7 @@
                 const currentReservationButton = currentRoomCard.querySelector('.reservation-button');
                 const currentSecondButtonGroup = currentRoomCard.querySelector('.second-button-group');
                 const currentBigReservation = currentRoomCard.querySelector('.big-reservation');
-                
+
                 const filterallcard = document.querySelector('.filter-card');
                 const filterallcardwh = document.querySelector('.filter-card-wh');
                 const roomContainer = document.querySelector('.col-lg-12.col-xl-12');
@@ -892,7 +909,7 @@
                 // Butonları geri değiştir
                 currentSecondButtonGroup.classList.add('d-none');
                 currentReservationButton.classList.remove('d-none');
-                
+
                 if (currentBigReservation) {
                     currentBigReservation.classList.add("d-none");
                 }
