@@ -743,7 +743,7 @@
                                                                         <tr>
                                                                             <td><span class="date-badge">05 Eki 2025</span></td>
                                                                             <td><span class="date-badge">08 Eki 2025</span></td>
-                                                                            <td><span class="status-badge available">Müsait</span></td>
+                                                                            <td><span class="status-badge occupied">Dolu</span></td>
                                                                             <td><span class="days-badge">3 Gün</span></td>
                                                                         </tr>
                                                                         <tr>
