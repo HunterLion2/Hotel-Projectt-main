@@ -711,7 +711,6 @@
                                                     </p>
 
                                                     <div class="big-reservation d-none">
-
                                                         <div class="reservation-schedule">
                                                             <h5 class="schedule-title">
                                                                 <i class="bi bi-calendar2-week"></i> Rezervasyon Takvimi
