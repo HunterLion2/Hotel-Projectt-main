@@ -274,7 +274,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin: 15px 0;
+            margin: 8px 0;
         }
 
         .feature-tag {
@@ -799,6 +799,14 @@
                                                         <button class="btn btn-reserve reservation-button">
                                                             <a href="#" class="reservation-link"><i class="bi bi-calendar-check"></i> Rezervasyon Yap</a>
                                                         </button>
+                                                        <div class="row second-button-group d-none">
+                                                            <div class="col-5 col-lg-5">
+                                                                <button class="btn btn-secondary" type="button">Geri Gel</button>
+                                                            </div>
+                                                            <div class="col-5 col-lg-5">
+                                                                <button class="btn btn-success" type="button">Rezerve Et</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -831,30 +839,80 @@
         // Rezervasyon Bölümü Script
 
         document.querySelectorAll('.reservation-button').forEach(function(button) {
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function(e) {
+                e.preventDefault(); // Link tıklamasını engelle
+                
                 const filterallcard = document.querySelector('.filter-card');
                 const filterallcardwh = document.querySelector('.filter-card-wh');
                 const roomContainer = document.querySelector('.col-lg-8.col-xl-9');
                 const filter = document.querySelector('.filtreleme');
-                const roomdisagn = document.querySelector(".room-card");
+                
+                // Tıklanan butonun bulunduğu room-card'ı bul
+                const currentRoomCard = button.closest('.room-card');
+                const currentReservationButton = currentRoomCard.querySelector('.reservation-button');
+                const currentSecondButtonGroup = currentRoomCard.querySelector('.second-button-group');
+                const currentBigReservation = currentRoomCard.querySelector('.big-reservation');
 
                 filterallcard.classList.add('animate__animated', 'animate__bounceOut');
-
+                
                 setTimeout(() => {
                     filterallcardwh.classList.remove('col-lg-4', 'col-xl-3');
                     filterallcardwh.classList.add('d-none');
+
+                    // Sadece tıklanan odanın butonlarını değiştir
+                    currentReservationButton.classList.add('d-none');
+                    currentSecondButtonGroup.classList.remove('d-none');
 
                     if (roomContainer) {
                         roomContainer.classList.remove('col-lg-8', 'col-xl-9');
                         roomContainer.classList.add('col-lg-12', 'col-xl-12', 'animate__animated', 'animate__pulse');
                     }
-                    const bigreservation = document.querySelector(".big-reservation");
 
-                    bigreservation.classList.remove("d-none")
+                    if (currentBigReservation) {
+                        currentBigReservation.classList.remove("d-none");
+                    }
                 }, 500);
 
             });
         })
+
+        // Geri Gel butonları için event listener
+        document.querySelectorAll('.btn-secondary').forEach(function(backButton) {
+            backButton.addEventListener('click', function() {
+                const currentRoomCard = backButton.closest('.room-card');
+                const currentReservationButton = currentRoomCard.querySelector('.reservation-button');
+                const currentSecondButtonGroup = currentRoomCard.querySelector('.second-button-group');
+                const currentBigReservation = currentRoomCard.querySelector('.big-reservation');
+                
+                const filterallcard = document.querySelector('.filter-card');
+                const filterallcardwh = document.querySelector('.filter-card-wh');
+                const roomContainer = document.querySelector('.col-lg-12.col-xl-12');
+                const filter = document.querySelector('.filtreleme');
+
+                // Butonları geri değiştir
+                currentSecondButtonGroup.classList.add('d-none');
+                currentReservationButton.classList.remove('d-none');
+                
+                if (currentBigReservation) {
+                    currentBigReservation.classList.add("d-none");
+                }
+
+                // Filter alanını geri getir
+                setTimeout(() => {
+                    filterallcardwh.classList.remove('d-none');
+                    filterallcardwh.classList.add('col-lg-4', 'col-xl-3');
+                    filter.classList.add('d-none');
+
+                    if (roomContainer) {
+                        roomContainer.classList.remove('col-lg-12', 'col-xl-12');
+                        roomContainer.classList.add('col-lg-8', 'col-xl-9');
+                    }
+
+                    filterallcard.classList.remove('animate__animated', 'animate__bounceOut');
+                }, 200);
+            });
+        })
+
         // Tarih validasyonu
         document.addEventListener('DOMContentLoaded', function() {
             const dateStart = document.querySelector('input[name="date-start"]');
