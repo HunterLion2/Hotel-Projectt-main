@@ -859,12 +859,7 @@
 
         document.querySelectorAll('#come-back-button').forEach(function(comeBackButton) {
             comeBackButton.addEventListener('click', function() {
-                fetch('/reservation/combackAllRoom', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                }).then(response => response.json())
+                window.location.reload()
             });
         });
 
@@ -983,7 +978,6 @@
                 const roomContainer = document.querySelector('.col-lg-12.col-xl-12');
                 const filter = document.querySelector('.filtreleme');
 
-                // Butonları geri değiştir
                 currentSecondButtonGroup.classList.add('d-none');
                 currentReservationButton.classList.remove('d-none');
 
@@ -991,7 +985,6 @@
                     currentBigReservation.classList.add("d-none");
                 }
 
-                // Filter alanını geri getir
                 setTimeout(() => {
                     filterallcardwh.classList.remove('d-none');
                     filterallcardwh.classList.add('col-lg-4', 'col-xl-3');
