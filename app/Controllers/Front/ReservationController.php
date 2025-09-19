@@ -93,25 +93,4 @@ class ReservationController extends BaseController
             ]);
         }
     }
-
-    public function combackAllRoom(){
-
-        header('Content-Type: application/json');
-
-        $allRoom = $this->roomModel->getAllRoom();
-
-        if($allRoom) {
-            echo json_encode([
-                'success' => true,
-                'room' => $allRoom
-            ]);
-        } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Oda Bulunamadı'
-            ]);
-        }
-
-    }
-
 }
