@@ -817,7 +817,7 @@
                                                         </button>
                                                         <div class="row second-button-group d-none">
                                                             <div class="col-5 col-lg-5">
-                                                                <button class="btn btn-secondary" type="button">Geri Gel</button>
+                                                                <button class="btn btn-secondary" id="come-back-button" type="button">Geri Gel</button>
                                                             </div>
                                                             <div class="col-5 col-lg-5">
                                                                 <button class="btn btn-success" type="button">Rezerve Et</button>
@@ -853,6 +853,85 @@
 
     <script>
         // Rezervasyon Bölümü Script
+
+
+        // Geri-Gel Butonu İle Bütün Sayfaların Gelmesi
+
+        document.querySelectorAll('#come-back-button').forEach(function(comeBackButton) {
+            comeBackButton.addEventListener('click', function() {
+                fetch('/reservation/combackAllRoom', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response => response.json())
+            });
+        });
+
+
+        // Tek Sayfa Gelme Script'i
+
+        document.querySelectorAll('.reservation-button').forEach(function(reservationButton) {
+
+            // Buradaki closest değeri
+
+            reservationButton.addEventListener('click', function() {
+                const currentRoomCard = reservationButton.closest('.room-card');
+                const roomTitle = currentRoomCard.querySelector('.room-title').textContent.trim();
+
+                hideOtherRooms(currentRoomCard);
+
+                fetchRoomDetails(roomTitle, currentRoomCard);
+
+            });
+
+        });
+
+        function hideOtherRooms(selectedRooms) {
+            const allRoomCards = document.querySelectorAll('.room-card');
+
+            allRoomCards.forEach(function(roomCard) {
+                if (roomCard !== selectedRooms) {
+                    roomCard.style.display = 'none';
+                }
+            });
+        }
+
+        function fetchRoomDetails(roomName, roomCard) {
+            const roomContent = roomCard.querySelector('.room-content');
+
+            fetch('/reservation/getRoomDetails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        room_name: roomTitle
+                    })
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Sunucu Hatası: ' + response.status);
+                    }
+                    return response.json();
+                }).then(data => {
+                    if (data.success) {
+                        console.log('Oda detayları başarıyla yüklendi:', data.room);
+                    } else {
+                        alert('Oda bilgileri bulunamadı: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    // Loading'i kaldır
+                    const loadingSpinner = roomCard.querySelector('.loading-spinner');
+                    if (loadingSpinner) {
+                        loadingSpinner.remove();
+                    }
+
+                    console.error('AJAX Hatası:', error);
+                    alert('Bir hata oluştu: ' + error.message);
+                });
+
+        }
 
         document.querySelectorAll('.reservation-button').forEach(function(button) {
             button.addEventListener("click", function(e) {
@@ -892,7 +971,6 @@
             });
         })
 
-        // Geri Gel butonları için event listener
         document.querySelectorAll('.btn-secondary').forEach(function(backButton) {
             backButton.addEventListener('click', function() {
                 const currentRoomCard = backButton.closest('.room-card');
@@ -929,7 +1007,6 @@
             });
         })
 
-        // Tarih validasyonu
         document.addEventListener('DOMContentLoaded', function() {
             const dateStart = document.querySelector('input[name="date-start"]');
             const dateEnd = document.querySelector('input[name="date-end"]');

@@ -203,4 +203,27 @@ class HotelModel
             return [];
         }
     }
+
+    public function getRoomByName($roomName)
+    {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT 
+                    r.*,
+                    ps.`none-smoke`,
+                    ps.`engelli-erişimi`,
+                    ps.`romantic-packet`
+                FROM `rooms-table` r
+                LEFT JOIN `private-settings` ps ON r.id = ps.room_id
+                WHERE r.`room-name` = ?
+                LIMIT 1
+            ");
+            $stmt->execute([$roomName]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("getRoomByName error: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

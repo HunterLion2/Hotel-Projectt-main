@@ -33,11 +33,9 @@ class ReservationController extends BaseController
                     $disabledAccess = isset($_GET['engelli-erişimi']);
                     $romanticPacket = isset($_GET['romantic-packet']);
 
-                    if($noneSmoke || $disabledAccess || $romanticPacket) {
+                    if ($noneSmoke || $disabledAccess || $romanticPacket) {
                         $rooms = $this->roomModel->filterWithSpecialFeatures($capacity, $priceFilter, $noneSmoke, $disabledAccess, $romanticPacket);
-                    }
-
-                    else if ($capacity) {
+                    } else if ($capacity) {
                         if ($capacity <= 2) {
                             if (!empty($priceFilter)) {
                                 $rooms = $this->roomModel->twopricefilter($priceFilter, $capacity);
@@ -73,4 +71,47 @@ class ReservationController extends BaseController
         // ]);
 
     }
+
+    public function getRoomDetails()
+    {
+        header('Content-Type: application/json');
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $roomName = $input['room_name'] ?? '';
+
+        $room = $this->roomModel->getRoomByName($roomName);
+
+        if ($room) {
+            echo json_encode([
+                'success' => true,
+                'room' => $room
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Oda bulunamadı'
+            ]);
+        }
+    }
+
+    public function combackAllRoom(){
+
+        header('Content-Type: application/json');
+
+        $allRoom = $this->roomModel->getAllRoom();
+
+        if($allRoom) {
+            echo json_encode([
+                'success' => true,
+                'room' => $allRoom
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Oda Bulunamadı'
+            ]);
+        }
+
+    }
+
 }
