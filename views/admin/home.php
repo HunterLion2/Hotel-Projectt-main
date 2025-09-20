@@ -4,110 +4,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kalnia:wght@100..700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <!-- Bootstrap & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <title>Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Satış Dashboard</title>
 </head>
 
 <style>
+    :root {
+        --primary-color: #2F5336;
+        --accent-color: #4CAF50;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --info-color: #17a2b8;
+    }
 
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .stats-card {
+        min-height: 200px;
+        max-height: 250px;
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .stats-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .stats-number {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #343a40;
+    }
+
+    .small-chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+
+    .small-chart-container canvas {
+        max-height: 250px !important;
+        height: 250px !important;
+    }
+
+    .chart-container canvas {
+        max-height: 400px !important;
+        height: 400px !important;
+    }
+
+    .chart-container {
+        min-height: 400px;
+        max-height: 450px;
+        overflow: hidden;
+    }
+
+    .chart-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #343a40;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .revenue-card {
+        background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
+    }
+
+    .booking-card {
+        background: linear-gradient(135deg, var(--info-color) 0%, #6f42c1 100%);
+    }
+
+    .occupancy-card {
+        background: linear-gradient(135deg, var(--warning-color) 0%, #fd7e14 100%);
+    }
+
+    .rooms-card {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    }
+
+    .progress-ring {
+        width: 120px;
+        height: 120px;
+        position: relative;
+    }
+
+    .progress-ring-circle {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(var(--accent-color) 0deg, var(--accent-color) calc(var(--progress) * 3.6deg), #e9ecef calc(var(--progress) * 3.6deg), #e9ecef 360deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .progress-ring-circle::before {
+        content: '';
+        width: 80%;
+        height: 80%;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .progress-text {
+        position: absolute;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #343a40;
+        z-index: 1;
+    }
 </style>
 
 <body>
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="container">
+            <h1><i class="bi bi-speedometer2"></i> Satış Dashboard</h1>
+            <p>Dinamik satış performansı ve istatistikler</p>
+        </div>
+    </div>
 
     <div class="container">
-        <div class="admin-panel">
-            <div class="admin-panel-header">
-                <div class="row">
-                    <div class="">
-
+        <!-- İstatistik Kartları -->
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stats-card">
+                    <div class="stats-icon revenue-card">
+                        <i class="bi bi-currency-dollar"></i>
                     </div>
+                    <div class="stats-number">₺4.2M</div>
+                    <div class="stats-label">Toplam Gelir</div>
                 </div>
             </div>
-            <div class="admin-panel-body">
-                <div class="reservation-schedule">
-                    <h5 class="schedule-title">
-                        <i class="bi bi-calendar2-week"></i> Rezervasyon Takvimi
-                    </h5>
-                    <div class="schedule-table-container">
-                        <table class="table table-sm schedule-table">
-                            <thead>
-                                <tr>
-                                    <th>Giriş Tarihi</th>
-                                    <th>Çıkış Tarihi</th>
-                                    <th>Durum</th>
-                                    <th>Gün Sayısı</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Örnek rezervasyon verileri - Gerçek veriler için PHP'den gelmeli -->
-                                <tr>
-                                    <td><span class="date-badge">22 Eyl 2025</span></td>
-                                    <td><span class="date-badge">25 Eyl 2025</span></td>
-                                    <td><span class="status-badge occupied">Dolu</span></td>
-                                    <td><span class="days-badge">3 Gün</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="date-badge">28 Eyl 2025</span></td>
-                                    <td><span class="date-badge">02 Eki 2025</span></td>
-                                    <td><span class="status-badge occupied">Dolu</span></td>
-                                    <td><span class="days-badge">4 Gün</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="date-badge">05 Eki 2025</span></td>
-                                    <td><span class="date-badge">08 Eki 2025</span></td>
-                                    <td><span class="status-badge occupied">Dolu</span></td>
-                                    <td><span class="days-badge">3 Gün</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="date-badge">12 Eki 2025</span></td>
-                                    <td><span class="date-badge">15 Eki 2025</span></td>
-                                    <td><span class="status-badge occupied">Dolu</span></td>
-                                    <td><span class="days-badge">3 Gün</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stats-card">
+                    <div class="stats-icon booking-card">
+                        <i class="bi bi-calendar-check"></i>
                     </div>
-                    <div class="schedule-legend">
-                        <small class="text-muted">
-                            <span class="legend-item">
-                                <span class="status-badge occupied"></span> Rezerve Edilmiş
-                            </span>
-                            <span class="legend-item">
-                                <span class="status-badge available"></span> Müsait
-                            </span>
-                        </small>
-                    </div>
-
-                    <form action="POST">
-                        <h5 class="schedule-title">
-                            <i class="fa-solid fa-calendar-plus"></i> Tarih Aralığı Seçiniz
-                        </h5>
-                        <div class="row">
-                            <div class="col-5 co-lg-5">
-                                <h6 class="mx-1">Giriş Tarihi</h6>
-                                <input class="form-control" type="date" name="first-sign" id="">
-                            </div>
-                            <div class="col-6 col-lg-5">
-                                <h6 class="mx-1">Çıkış Tarihi</h6>
-                                <input class="form-control" type="date" name="last-sign" id="">
-                            </div>
+                    <div class="stats-number">1,250</div>
+                    <div class="stats-label">Rezervasyon</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stats-card text-center">
+                    <div class="progress-ring mx-auto" style="--progress: 78.5">
+                        <div class="progress-ring-circle">
+                            <div class="progress-text">78.5%</div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="stats-label mt-2">Doluluk Oranı</div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="stats-card">
+                    <div class="stats-icon rooms-card">
+                        <i class="bi bi-house"></i>
+                    </div>
+                    <div class="stats-number">24</div>
+                    <div class="stats-label">Toplam Oda</div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Grafikler -->
+        <div class="row">
+            <!-- Aylık Satış -->
+            <div class="col-12 col-lg-8">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-graph-up"></i> Aylık Satış Performansı
+                    </h3>
+                    <canvas id="salesChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Oda Türleri -->
+            <div class="col-12 col-lg-4">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-pie-chart"></i> Oda Türleri
+                    </h3>
+                    <canvas id="roomTypesChart" width="300" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gelir Analizi -->
+        <div class="row">
+            <div class="col-12">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-bar-chart"></i> Aylık Gelir Analizi
+                    </h3>
+                    <canvas id="revenueChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        // Satış verileri
+        const salesData = {
+            monthly: {
+                labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+                data: [12, 19, 15, 25, 22, 30, 35, 32, 28, 24, 18, 16],
+                revenue: [180000, 285000, 225000, 375000, 330000, 450000, 525000, 480000, 420000, 360000, 270000, 240000]
+            },
+            roomTypes: {
+                labels: ['Standart', 'Deluxe', 'Suite', 'Presidential'],
+                data: [45, 30, 20, 5],
+                colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }
+        };
+
+        // Line Chart - Satış
+        new Chart(document.getElementById('salesChart'), {
+            type: 'line',
+            data: {
+                labels: salesData.monthly.labels,
+                datasets: [{
+                    label: 'Rezervasyon',
+                    data: salesData.monthly.data,
+                    borderColor: '#2F5336',
+                    backgroundColor: '#2F533620',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                aspectRatio: 2, // Genişlik/Yükseklik oranı
+                layout: {
+                    padding: {
+                        top: 10,
+                        bottom: 10
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Doughnut Chart - Oda Türleri
+        new Chart(document.getElementById('roomTypesChart'), {
+            type: 'doughnut',
+            data: {
+                labels: salesData.roomTypes.labels,
+                datasets: [{
+                    data: salesData.roomTypes.data,
+                    backgroundColor: salesData.roomTypes.colors,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%'
+            }
+        });
+
+        // Bar Chart - Gelir
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'bar',
+            data: {
+                labels: salesData.monthly.labels,
+                datasets: [{
+                    label: 'Gelir (₺)',
+                    data: salesData.monthly.revenue,
+                    backgroundColor: '#4CAF5080',
+                    borderColor: '#4CAF50',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₺' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Dinamik güncelleme - Her 5 saniyede değişim
+        setInterval(() => {
+            // Rastgele değişim simülasyonu
+            salesData.monthly.data = salesData.monthly.data.map(val =>
+                Math.max(5, val + Math.floor(Math.random() * 10) - 5)
+            );
+
+            // Grafikleri güncelle
+            Chart.getChart('salesChart').data.datasets[0].data = salesData.monthly.data;
+            Chart.getChart('salesChart').update('active');
+        }, 5000);
+    </script>
 </body>
 
 </html>

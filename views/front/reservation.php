@@ -868,7 +868,7 @@
 
         document.querySelectorAll('.reservation-button').forEach(function(reservationButton) {
 
-            // Buradaki closest değeri
+            // Buradaki closest değeri addEventListener değeri ile tıkladığımız değeri hangi değer olduğunu bulup bize o değerin istediğimiz değerini çekip getiriyor.
 
             reservationButton.addEventListener('click', function() {
                 const currentRoomCard = reservationButton.closest('.room-card');
