@@ -30,12 +30,19 @@
     .dashboard-header {
         background: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
         color: white;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
+        padding: 1rem 0;
+    }
+
+    .section-area {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
+        padding: 0 5rem;
+        display: flex;
+        flex-direction: row;
     }
 
     .stats-card {
         min-height: 200px;
+        text-align: center;
         max-height: 250px;
         background: white;
         border-radius: 15px;
@@ -60,6 +67,7 @@
         font-size: 1.5rem;
         color: white;
         margin-bottom: 1rem;
+        margin: 0 auto 1rem auto;
     }
 
     .stats-number {
@@ -102,6 +110,7 @@
     }
 
     .revenue-card {
+
         background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
     }
 
@@ -150,6 +159,25 @@
         color: #343a40;
         z-index: 1;
     }
+
+    .room-add-button {
+        border-radius: 15px 15px 0px 0px;
+        padding: 10px 15px;
+        margin: 0px 10px 0px 0px;
+        background-color: #f8f9fa;
+        color: #343a40;
+        border: none;
+    }
+
+    .room-add-button:hover {
+        border-radius: 15px 15px 0px 0px;
+        padding: 10px 15px;
+        margin: 0px 10px 0px 0px;
+        background-color: #bdbdbdff;
+        color: #ffffffff;
+        border: none;        
+    }
+
 </style>
 
 <body>
@@ -157,8 +185,12 @@
     <div class="dashboard-header">
         <div class="container">
             <h1><i class="bi bi-speedometer2"></i> Satış Dashboard</h1>
-            <p>Dinamik satış performansı ve istatistikler</p>
         </div>
+    </div>
+    <div class="section-area">
+        <button type="submit" class="room-add-button">İstatistikler</button>
+        <button type="submit" class="room-add-button">Oda Ekleme</button>
+    </div>
     </div>
 
     <div class="container">
@@ -167,7 +199,7 @@
             <div class="col-12 col-sm-6 col-lg-3">
                 <div class="stats-card">
                     <div class="stats-icon revenue-card">
-                        <i class="bi bi-currency-dollar"></i>
+                        <i class="bi bi-currency-dollar "></i>
                     </div>
                     <div class="stats-number">₺4.2M</div>
                     <div class="stats-label">Toplam Gelir</div>

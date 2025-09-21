@@ -871,7 +871,7 @@
             // Buradaki closest değeri addEventListener değeri ile tıkladığımız değeri hangi değer olduğunu bulup bize o değerin istediğimiz değerini çekip getiriyor.
 
             reservationButton.addEventListener('click', function() {
-                const currentRoomCard = reservationButton.closest('.room-card');
+                const currentRoomCard = reservationButton.closest('.room-card');    
                 const roomTitle = currentRoomCard.querySelector('.room-title').textContent.trim();
 
                 hideOtherRooms(currentRoomCard);
@@ -901,7 +901,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        room_name: roomTitle
+                        room_name: roomTitlex
                     })
                 }).then(response => {
                     if (!response.ok) {
