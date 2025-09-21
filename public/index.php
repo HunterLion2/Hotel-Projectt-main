@@ -8,7 +8,9 @@ use App\Core\BaseController;
 
 Route::add('/', 'Front\HomeController@index');
 Route::add('/reservation', 'Front\ReservationController@index');
-Route::add('/adminhotel','Admin\AdminController@index');
+Route::add('/adminhotel','Admin\AdminController@home');
+Route::add('/adminhotelrooms','Admin\AdminController@rooms');
+Route::add('/adminhotelroomadd','Admin\AdminController@RoomAdd');
 
 // Gelen URI'yi al ve yönlendir
 $uri = $_SERVER['REQUEST_URI'];

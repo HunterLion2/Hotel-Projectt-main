@@ -160,22 +160,31 @@
         z-index: 1;
     }
 
-    .room-add-button {
+    .room-add-link {
         border-radius: 15px 15px 0px 0px;
         padding: 10px 15px;
         margin: 0px 10px 0px 0px;
         background-color: #f8f9fa;
         color: #343a40;
-        border: none;
+        text-decoration: none;
     }
 
-    .room-add-button:hover {
+    .room-add-link:hover {
         border-radius: 15px 15px 0px 0px;
         padding: 10px 15px;
         margin: 0px 10px 0px 0px;
         background-color: #bdbdbdff;
+        text-decoration: none;
         color: #ffffffff;
-        border: none;        
+    }
+
+    .selected {
+        border-radius: 15px 15px 0px 0px;
+        padding: 10px 15px;
+        margin: 0px 10px 0px 0px;
+        background-color: #bdbdbdff;
+        text-decoration: none;
+        color: #ffffffff;
     }
 
 </style>
@@ -188,8 +197,10 @@
         </div>
     </div>
     <div class="section-area">
-        <button type="submit" class="room-add-button">İstatistikler</button>
-        <button type="submit" class="room-add-button">Oda Ekleme</button>
+        <a href="/adminhotel" class="room-add-link selected">İstatistikler</a>
+        <a href="/adminhotelrooms" class="room-add-link ">Odalar</a>
+        <a href="/adminhotelroomadd" class="room-add-link">Oda Ekleme</a>
+        <a href="" class="room-add-link">Rezerve Odalar</a>
     </div>
     </div>
 
