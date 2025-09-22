@@ -101,7 +101,8 @@ class HotelModel
         }
     }
 
-      public function filterWithSpecialFeatures($capacity = null, $price = null, $noneSmoke = false, $disabledAccess = false, $romanticPacket = false)
+    
+    public function filterWithSpecialFeatures($capacity = null, $price = null, $noneSmoke = false, $disabledAccess = false, $romanticPacket = false)
     {
         try {
             $sql = "
@@ -121,7 +122,7 @@ class HotelModel
                     $sql .= " AND r.capacity >= ?";
                     $params[] = 5;
                 } else {
-                    $sql .= " AND r.capacity >= ?";
+                    $sql .= " AND r.capacity <= ?";
                     $params[] = (int)$capacity;
                 }
             }
@@ -132,15 +133,15 @@ class HotelModel
             }
 
             if ($noneSmoke) {
-                $sql .= " AND (ps.`none-smoke` = 1 OR r.`smoke-packet` = 0)";
+                $sql .= " AND (ps.`none-smoke` = 1)";
             }
 
             if ($disabledAccess) {
-                $sql .= " AND (ps.`engelli-erişimi` = 1 OR r.`engelli-packet` = 1)";
+                $sql .= " AND (ps.`engelli-erişimi` = 1)";
             }
 
             if ($romanticPacket) {
-                $sql .= " AND (ps.`romantic-packet` = 1 OR r.`romantik-packet` = 1)";
+                $sql .= " AND (ps.`romantic-packet` = 1)";
             }
 
             $stmt = $this->db->prepare($sql);

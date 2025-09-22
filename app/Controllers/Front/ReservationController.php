@@ -26,7 +26,7 @@ class ReservationController extends BaseController
             if (isset($this->db)) {
 
                 if (isset($_GET['filter_submitted']) && $_GET['filter_submitted'] == "1") {
-                    $capacity = $_GET['kişisay'] ?? null;
+                    $capacity = $_GET['kişisay'];
                     $priceFilter = $_GET['price-filter'] ?? null;
 
                     $noneSmoke = isset($_GET['none-smoke']);
@@ -35,7 +35,7 @@ class ReservationController extends BaseController
 
                     if ($noneSmoke || $disabledAccess || $romanticPacket) {
                         $rooms = $this->roomModel->filterWithSpecialFeatures($capacity, $priceFilter, $noneSmoke, $disabledAccess, $romanticPacket);
-                    } else if ($capacity) {
+                    } else if (isset($capacity)) {
                         if ($capacity <= 2) {
                             if (!empty($priceFilter)) {
                                 $rooms = $this->roomModel->twopricefilter($priceFilter, $capacity);
