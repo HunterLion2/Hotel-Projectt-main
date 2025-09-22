@@ -21,7 +21,12 @@ class AdminController extends BaseController
 
     public function home()
     {
-        $this->renderAdmin("admin/home");
+
+        $data = [];
+
+        $data = $this->roomModel->getAllRoomCount();
+
+        $this->renderAdmin("admin/home", ['data' => $data]);
     }
 
     public function rooms()

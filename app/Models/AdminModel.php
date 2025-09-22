@@ -16,10 +16,20 @@ class AdminModel
         $this->db = Database::getInstance();
     }
 
-    public function AllRoomGet() {
+    public function AllRoomGet()
+    {
         $result = $this->db->prepare("SELECT * FROM `rooms-table`");
         $result->execute();
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllRoomCount()
+    {
+
+        $result = $this->db->prepare("SELECT COUNT('room-name') FROM `rooms-table` ");
+
+        $result->execute();
+
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

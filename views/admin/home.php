@@ -240,7 +240,7 @@
                     <div class="stats-icon rooms-card">
                         <i class="bi bi-house"></i>
                     </div>
-                    <div class="stats-number">24</div>
+                    <div class="stats-number"><?= $data[0]["COUNT('room-name')"] ?></div>
                     <div class="stats-label">Toplam Oda</div>
                 </div>
             </div>
