@@ -189,6 +189,7 @@
 
 </style>
 
+
 <body>
     <!-- Dashboard Header -->
     <div class="dashboard-header">
@@ -198,8 +199,8 @@
     </div>
     <div class="section-area">
         <a href="/adminhotel" class="room-add-link selected">İstatistikler</a>
-        <a href="/adminhotelrooms" class="room-add-link ">Odalar</a>
-        <a href="/adminhotelroomadd" class="room-add-link">Oda Ekleme</a>
+        <a href="/adminhotel/adminhotelrooms" class="room-add-link ">Odalar</a>
+        <a href="/adminhotel/adminhotelroomadd" class="room-add-link">Oda Ekleme</a>
         <a href="" class="room-add-link">Rezerve Odalar</a>
     </div>
     </div>

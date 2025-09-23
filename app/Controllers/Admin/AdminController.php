@@ -26,12 +26,14 @@ class AdminController extends BaseController
 
         $data = $this->roomModel->getAllRoomCount();
 
+        // header("Location : sign.php");
+        // exit; 502 Hatası veriyor buna bakıcam.
+
         $this->renderAdmin("admin/home", ['data' => $data]);
     }
 
     public function rooms()
     {
-
         $result = [];
 
         $result = $this->roomModel->AllRoomGet();
@@ -43,4 +45,6 @@ class AdminController extends BaseController
     {
         $this->renderAdmin("admin/roomadd");
     }
+
+    public function Security() {}
 }

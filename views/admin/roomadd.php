@@ -281,10 +281,10 @@
                             </label>
                             <select name="room-type" class="modern-input form-control" required>
                                 <option value="">Oda Tipi Seçin</option>
-                                <option value="standart">Standart</option>
-                                <option value="deluxe">Deluxe</option>
-                                <option value="suite">Suite</option>
-                                <option value="presidential">Presidential</option>
+                                <option value="Standart Room">Standart</option>
+                                <option value="Deluxe Room">Deluxe</option>
+                                <option value="Suite Room">Suite</option>
+                                <option value="Presidential Room">Presidential</option>
                             </select>
                         </div>
                     </div>
