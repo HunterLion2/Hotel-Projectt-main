@@ -820,7 +820,7 @@
                                                                 <button class="btn btn-secondary" id="come-back-button" type="button">Geri Gel</button>
                                                             </div>
                                                             <div class="col-5 col-lg-5">
-                                                                <button class="btn btn-success reservation-button" type="button" name="reservationButton" value="1">Rezerve Et</button>
+                                                                <button class="btn btn-success reservation-button" type="submit" name="reservationButton" value="1">Rezerve Et</button>
                                                             </div>
                                                         </div>
                                                     </div>
