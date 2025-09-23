@@ -785,10 +785,10 @@
                                                     </div>
 
                                                     <div class="room-features">
-                                                        <span class="feature-tag"><i class="bi bi-wifi"></i><?= htmlspecialchars($room['wifi']) ?></span>
-                                                        <span class="feature-tag"><i class="bi bi-tv"></i> <?= htmlspecialchars($room['Tv']) ?></span>
-                                                        <span class="feature-tag"><i class="bi bi-snow"></i> <?= htmlspecialchars($room['climate']) ?></span>
-                                                        <span class="feature-tag"><i class="bi bi-cup-hot"></i> <?= htmlspecialchars($room['minibar']) ?></span>
+                                                        <span class="feature-tag"><i class="bi bi-wifi px-1"></i>Wifi</span>
+                                                        <span class="feature-tag"><i class="bi bi-tv px-1"></i>Tv</span>
+                                                        <span class="feature-tag"><i class="bi bi-snow px-1"></i>Climate</span>
+                                                        <span class="feature-tag"><i class="bi bi-cup-hot px-1"></i>Minibar</span>
                                                         <?php if (!empty($room['none-smoke']) && $room['none-smoke'] == '1'): ?>
                                                             <span class="feature-tag" style="background: #e8f5e8; color: #2e7d32;">
                                                                 <i class="bi bi-shield-check"></i> Sigara İçilmeyen

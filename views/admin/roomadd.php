@@ -261,7 +261,7 @@
                                 <i class="fas fa-users"></i>
                                 Kişi Kapasitesi
                             </label>
-                            <select name="capacity" class="modern-input" required>
+                            <select name="capacity" class="modern-input form-control" required>
                                 <option value="">Kapasite Seçin</option>
                                 <option value="1">1 Kişi</option>
                                 <option value="2">2 Kişi</option>
@@ -279,7 +279,7 @@
                                 <i class="fas fa-home"></i>
                                 Oda Tipi
                             </label>
-                            <select name="room-type" class="modern-input" required>
+                            <select name="room-type" class="modern-input form-control" required>
                                 <option value="">Oda Tipi Seçin</option>
                                 <option value="standart">Standart</option>
                                 <option value="deluxe">Deluxe</option>
@@ -333,12 +333,12 @@
                     <div class="col-md-4">
                         <div class="feature-card">
                             <div class="feature-icon">
-                                <i class="fas fa-wifi"></i>
+                                <i class="fa-solid fa-ban-smoking"></i>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="features[]" value="wifi" id="wifi">
                                 <label class="form-check-label" for="wifi">
-                                    <strong>Ücretsiz WiFi</strong>
+                                    <strong>Sigara İçilmeyen Oda</strong>
                                 </label>
                             </div>
                         </div>
@@ -352,7 +352,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="features[]" value="tv" id="tv">
                                 <label class="form-check-label" for="tv">
-                                    <strong>Smart TV</strong>
+                                    <strong>Engelli Erişimli Oda</strong>
                                 </label>
                             </div>
                         </div>
@@ -366,7 +366,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="features[]" value="ac" id="ac">
                                 <label class="form-check-label" for="ac">
-                                    <strong>Klima</strong>
+                                    <strong>Romantik Paket</strong>
                                 </label>
                             </div>
                         </div>
