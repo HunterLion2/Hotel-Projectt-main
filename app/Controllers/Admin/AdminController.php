@@ -46,5 +46,10 @@ class AdminController extends BaseController
         $this->renderAdmin("admin/roomadd");
     }
 
+    public function Users()
+    {
+        $this->renderAdmin("admin/users");
+    }
+
     public function Security() {}
 }
