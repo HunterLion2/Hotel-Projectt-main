@@ -96,6 +96,7 @@ class HotelModel
     }
 
     
+    // Burası halloldu.
     public function filterWithSpecialFeatures($capacity = null, $price = null, $noneSmoke = false, $disabledAccess = false, $romanticPacket = false)
     {
         try {
@@ -116,7 +117,7 @@ class HotelModel
                     $sql .= " AND r.capacity >= ?";
                     $params[] = 5;
                 } else {
-                    $sql .= " AND r.capacity <= ?";
+                    $sql .= " AND r.capacity = ?";
                     $params[] = (int)$capacity;
                 }
             }

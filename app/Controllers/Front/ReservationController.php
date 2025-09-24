@@ -36,7 +36,7 @@ class ReservationController extends BaseController
                     if ($noneSmoke || $disabledAccess || $romanticPacket) {
                         $rooms = $this->roomModel->filterWithSpecialFeatures($capacity, $priceFilter, $noneSmoke, $disabledAccess, $romanticPacket);
                     } else if (isset($capacity)) {
-                        if ($capacity <= 2) {
+                        if ($capacity = 2) {
                             if (!empty($priceFilter)) {
                                 $rooms = $this->roomModel->twopricefilter($priceFilter, $capacity);
                             } else {
