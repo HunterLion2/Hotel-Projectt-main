@@ -38,18 +38,12 @@ class HotelModel
     }
 
     public function capacityRoom($capacity){
-    
-                try {
+            try {
             $stmt = $this->db->prepare("
                 SELECT 
-                    r.*,
-                    ps.`none-smoke`,
-                    ps.`engelli-erişimi`,
-                    ps.`romantic-packet`
-                FROM `rooms-table` r
-                LEFT JOIN `private-settings` ps ON r.id = ps.room_id
-                WHERE r.capacity >= ?
-                ORDER BY r.price ASC
+                    *
+                FROM `rooms-table` 
+                WHERE capacity = ?
             ");
             $stmt->execute([$capacity]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);

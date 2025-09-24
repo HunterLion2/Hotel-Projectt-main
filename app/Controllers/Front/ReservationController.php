@@ -72,6 +72,28 @@ class ReservationController extends BaseController
 
     }
 
+    public function filterdeleted()
+    {
+
+        $data = [];
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        if ($data['action'] === 'sil') {
+            // Buradaki fonksiyon senin yazdığın bir işlem olabilir
+            $room = $this->roomModel->getAllRoom();
+
+            $this->render('/front/reservation', [
+                'rooms' => $room
+            ]);
+
+            echo json_encode(['success' => true, 'message' => 'Silme işlemi tamamlandı.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Geçersiz işlem.']);
+        }
+    }
+
     public function getRoomDetails()
     {
         header('Content-Type: application/json');

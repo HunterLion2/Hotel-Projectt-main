@@ -863,6 +863,19 @@
             });
         });
 
+        // Filtereleme Metodlarını İptal Etme
+
+        // Buraya yeni bir link oluşturulup eklenicek.
+        document.querySelector(".").addEventListener("click",function() {
+            fetch('ReservationController.php',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: 'sil' })
+            }).then(response => response.json());
+        })
+
 
         // Tek Sayfa Gelme Script'i
 
