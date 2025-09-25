@@ -33,16 +33,16 @@ class ReservationController extends BaseController
                     $disabledAccess = isset($_GET['engelli-erişimi']);
                     $romanticPacket = isset($_GET['romantic-packet']);
 
-                    if ($noneSmoke || $disabledAccess || $romanticPacket) {
+                    if ($noneSmoke || $disabledAccess || $romanticPacket) { // ++
                         $rooms = $this->roomModel->filterWithSpecialFeatures($capacity, $priceFilter, $noneSmoke, $disabledAccess, $romanticPacket);
-                    } else if (isset($capacity)) {
-                        if ($capacity = 2) {
+                    } else if (isset($capacity)) { // - -
+                        if ($capacity == 2) { // Buradaki hata (==) değeriydi bu değer yerine = kullanırsak bunun anlamı aslında ya doğrudur ya doğru bu doğru olana kadar aşşağıya geçme demektir bu.Bunu yapmak istersek (=) kullanmamız lazımdır.
                             if (!empty($priceFilter)) {
                                 $rooms = $this->roomModel->twopricefilter($priceFilter, $capacity);
                             } else {
                                 $rooms = $this->roomModel->capacityRoom($capacity);
                             }
-                        } else if ($capacity >= 3) {
+                        } else if ($capacity == 3) {
                             if (!empty($priceFilter)) {
                                 $rooms = $this->roomModel->threepricefilter($priceFilter, $capacity);
                             } else {
@@ -82,10 +82,10 @@ class ReservationController extends BaseController
 
         if ($data['action'] === 'sil') {
             // Buradaki fonksiyon senin yazdığın bir işlem olabilir
-            $room = $this->roomModel->getAllRoom();
+            $rooms = $this->roomModel->getAllRoom();
 
             $this->render('/front/reservation', [
-                'rooms' => $room
+                'rooms' => $rooms
             ]);
 
             echo json_encode(['success' => true, 'message' => 'Silme işlemi tamamlandı.']);

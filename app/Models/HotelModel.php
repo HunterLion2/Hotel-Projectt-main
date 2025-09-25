@@ -63,7 +63,7 @@ class HotelModel
                     ps.`romantic-packet`
                 FROM `rooms-table` r
                 LEFT JOIN `private-settings` ps ON r.id = ps.room_id
-                WHERE r.price <= ? AND r.capacity >= ?
+                WHERE r.price <= ? AND r.capacity = ?
                 ORDER BY r.price ASC
             ");
             $stmt->execute([$price, $capacity]);
@@ -84,7 +84,7 @@ class HotelModel
                     ps.`romantic-packet`
                 FROM `rooms-table` r
                 LEFT JOIN `private-settings` ps ON r.id = ps.room_id
-                WHERE r.price <= ? AND r.capacity >= ?
+                WHERE r.price <= ? AND r.capacity = ?
                 ORDER BY r.price ASC
             ");
             $stmt->execute([$price, $capacity]);
@@ -95,7 +95,6 @@ class HotelModel
         }
     }
 
-    
     // Burası halloldu.
     public function filterWithSpecialFeatures($capacity = null, $price = null, $noneSmoke = false, $disabledAccess = false, $romanticPacket = false)
     {

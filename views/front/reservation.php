@@ -663,7 +663,7 @@
 
                             <input type="hidden" class="click-filter" name="filter_submitted" value="1">
 
-                            <button type="submit" class="btn-filter">
+                            <button type="submit" class="btn-filter filter-button">
                                 <i class="bi bi-search"></i> Odaları Filtrele
                             </button>
                         </form>
@@ -682,9 +682,14 @@
                                 <h2>Müsait Odalar</h2>
                             </div>
 
-                            <span class="rooms-count">
-                                <i class="bi bi-house"></i> <?= count($rooms ?? []) ?> Oda Bulundu
+                            <span>
+                                <span class=""><button class="btn btn-danger filter-close-button d-none"><i class="fa-solid fa-filter-circle-xmark"></i> Filtreyi Kaldır</button></span>
+
+                                <span class="rooms-count">
+                                    <i class="bi bi-house"></i> <?= count($rooms ?? []) ?> Oda Bulundu
+                                </span>
                             </span>
+
                         </div>
 
                         <!-- Room Cards -->
@@ -866,16 +871,32 @@
         // Filtereleme Metodlarını İptal Etme
 
         // Buraya yeni bir link oluşturulup eklenicek.
-        document.querySelector(".").addEventListener("click",function() {
-            fetch('ReservationController.php',{
+        document.querySelector(".filter-close-button").addEventListener("click", function() {
+            fetch('ReservationController.php', { // AJAX Yöntemidir.
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ action: 'sil' })
+                body: JSON.stringify({
+                    action: 'sil'
+                })
             }).then(response => response.json());
         })
 
+        document.querySelector(".filter-button").addEventListener("click", function(e) {
+            e.preventDefault();
+
+            const closebutton = document.querySelector(".filter-close-button");
+
+            setTimeout(() => {
+                closebutton.classList.remove("d-none");
+            },300)
+
+
+            setTimeout(() => {
+                this.closest('form').submit()
+            }, 200)
+        });
 
         // Tek Sayfa Gelme Script'i
 
@@ -884,7 +905,7 @@
             // Buradaki closest değeri addEventListener değeri ile tıkladığımız değeri hangi değer olduğunu bulup bize o değerin istediğimiz değerini çekip getiriyor.
 
             reservationButton.addEventListener('click', function() {
-                const currentRoomCard = reservationButton.closest('.room-card');    
+                const currentRoomCard = reservationButton.closest('.room-card');
                 const roomTitle = currentRoomCard.querySelector('.room-title').textContent.trim();
 
                 hideOtherRooms(currentRoomCard);
@@ -894,6 +915,8 @@
             });
 
         });
+
+
 
         function hideOtherRooms(selectedRooms) {
             const allRoomCards = document.querySelectorAll('.room-card');
