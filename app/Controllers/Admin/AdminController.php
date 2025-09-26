@@ -19,6 +19,10 @@ class AdminController extends BaseController
         $this->roomModel = new AdminModel();
     }
 
+    public function Sign() {
+        $this->renderAdmin("admin/sign");
+    }
+
     public function home()
     {
 

@@ -11,6 +11,7 @@ Route::add('/reservation', 'Front\ReservationController@index');
 Route::add('/adminhotel','Admin\AdminController@home');
 Route::add('/adminhotel/adminhotelrooms','Admin\AdminController@rooms');
 Route::add('/adminhotel/adminusers','Admin\AdminController@Users');
+Route::add('/adminhotel/signin','Admin\AdminController@Sign');
 
 // Gelen URI'yi al ve yönlendir
 $uri = $_SERVER['REQUEST_URI'];
