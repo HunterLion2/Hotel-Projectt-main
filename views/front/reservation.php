@@ -707,6 +707,10 @@
                             <div class="col-12">
                                 <?php foreach ($rooms as $room): ?>
                                     <div class="room-card">
+                                        <!-- Hidden inputs for room data -->
+                                        <input type="hidden" class="room-capacity" value="<?= $room['capacity'] ?>">
+                                        <input type="hidden" class="room-id" value="<?= $room['id'] ?? '' ?>">
+                                        
                                         <div class="row g-0">
                                             <div class="col-md-4">
                                                 <div class="room-image">
@@ -823,41 +827,12 @@
                                                                 <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
                                                             </h5>
 
-                                                            <?php foreach ($rooms as $room): ?>
+                                                            <form action="" method="post">
+                                                                <div id="person-forms-container" class="person-forms-container">
 
-                                                                <?php for ($capacity = 1; $capacity <= $room['capacity']; $capacity++): ?>
-                                                                    <div class="number-person"><?= number_format($capacity) ?></div>
-
-
-                                                                    <form action="" method="post">
-                                                                        <div class="row mb-3">
-                                                                            <div class="col-12 col-lg-6">
-                                                                                <h6 class="mx-1">Ad</h6>
-                                                                                <input class="form-control" type="text" name="name">
-                                                                            </div>
-                                                                            <div class="col-12 col-lg-6">
-                                                                                <h6 class="mx-1">Soyad</h6>
-                                                                                <input class="form-control" type="text" name="surname">
-                                                                            </div>
-                                                                            <div class="col-12 col-lg-6">
-                                                                                <h6 class="mx-1">Doğum Tarihi</h6>
-                                                                                <input class="form-control" type="date" name="birthday">
-                                                                            </div>
-                                                                            <div class="col-12 col-lg-6">
-                                                                                <h6 class="mx-1">Telefon No</h6>
-                                                                                <input class="form-control" type="number" name="phonenumber">
-                                                                            </div>
-                                                                            <div class="col-12 col-lg-6">
-                                                                                <h6 class="mx-1">Cinsiyet</h6>
-                                                                                <select name="sex" id="" class="form-control">
-                                                                                    <option value="girl">Kız</option>
-                                                                                    <option value="man">Erkek</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                <?php endfor; ?>
-                                                            <?php endforeach; ?>
+                                                                </div>
+                                                                
+                                                            </form>
                                                         </div>
                                                     </div>
 
@@ -907,6 +882,40 @@
     <script>
         // Rezervasyon Bölümü Script
 
+
+        function generatePersonForm(personnumber) {
+            return `
+                <div class="person-form-group mb-4" data-person="${personnumber}">
+                    <div class="number-person">${personnumber}</div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-lg-6">
+                            <h6 class="mx-1">Ad</h6>
+                            <input class="form-control" type="text" name="persons[${personnumber}][name]" required>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <h6 class="mx-1">Soyad</h6>
+                            <input class="form-control" type="text" name="persons[${personnumber}][surname]" required>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <h6 class="mx-1">Doğum Tarihi</h6>
+                            <input class="form-control" type="date" name="persons[${personnumber}][birthday]" required>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <h6 class="mx-1">Telefon No</h6>
+                            <input class="form-control" type="number" name="persons[${personnumber}][phone]" required>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <h6 class="mx-1">Cinsiyet</h6>
+                            <select name="persons[${personnumber}][gender]" class="form-control" required>
+                                <option value="">Seçiniz</option>
+                                <option value="female">Kız</option>
+                                <option value="male">Erkek</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         // Geri-Gel Butonu İle Bütün Sayfaların Gelmesi
 
@@ -1027,6 +1036,18 @@
                 const currentSecondButtonGroup = currentRoomCard.querySelector('.second-button-group');
                 const currentBigReservation = currentRoomCard.querySelector('.big-reservation');
 
+                // Capacity'yi al ve form oluştur
+                const capacity = parseInt(currentRoomCard.querySelector('.room-capacity').value);
+                const container = currentRoomCard.querySelector('#person-forms-container');
+                
+                // Önceki formları temizle
+                container.innerHTML = '';
+                
+                // Capacity kadar form oluştur
+                for(let i = 1; i <= capacity; i++) {
+                    container.innerHTML += generatePersonForm(i);
+                }
+
                 filterallcard.classList.add('animate__animated', 'animate__bounceOut');
 
                 setTimeout(() => {
@@ -1049,6 +1070,8 @@
 
             });
         })
+
+        // Form oluşturan fonksiyon
 
         document.querySelectorAll('.btn-secondary').forEach(function(backButton) {
             backButton.addEventListener('click', function() {
@@ -1082,7 +1105,7 @@
                     filterallcard.classList.remove('animate__animated', 'animate__bounceOut');
                 }, 200);
             });
-        })
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             const dateStart = document.querySelector('input[name="date-start"]');
