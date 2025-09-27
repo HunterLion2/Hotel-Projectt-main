@@ -72,6 +72,10 @@ class ReservationController extends BaseController
 
     }
 
+    public function getroomcapacity(){
+        
+    }
+
     public function filterdeleted()
     {
 

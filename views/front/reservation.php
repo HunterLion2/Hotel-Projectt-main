@@ -554,6 +554,16 @@
                 padding: 3px 6px;
             }
         }
+
+        .number-person {
+            text-align: center;
+            margin-bottom: 20px;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            color: #fff;
+            background-color: #2e7d32;
+        }
     </style>
 </head>
 
@@ -714,7 +724,29 @@
                                                     <p class="text-muted mb-3">
                                                         <?= htmlspecialchars($room['capacity'])   ?> Kişiye Kadar Konaklama İmkanı
                                                     </p>
+                                                    <div class="room-features">
+                                                        <span class="feature-tag"><i class="bi bi-wifi px-1"></i>Wifi</span>
+                                                        <span class="feature-tag"><i class="bi bi-tv px-1"></i>Tv</span>
+                                                        <span class="feature-tag"><i class="bi bi-snow px-1"></i>Climate</span>
+                                                        <span class="feature-tag"><i class="bi bi-cup-hot px-1"></i>Minibar</span>
+                                                        <?php if (!empty($room['none-smoke']) && $room['none-smoke'] == '1'): ?>
+                                                            <span class="feature-tag" style="background: #e8f5e8; color: #2e7d32;">
+                                                                <i class="bi bi-shield-check"></i> Sigara İçilmeyen
+                                                            </span>
+                                                        <?php endif; ?>
 
+                                                        <?php if (!empty($room['engelli-erişimi']) && $room['engelli-erişimi'] == '1'): ?>
+                                                            <span class="feature-tag" style="background: #e3f2fd; color: #1976d2;">
+                                                                <i class="bi bi-universal-access"></i> Engelli Erişimi
+                                                            </span>
+                                                        <?php endif; ?>
+
+                                                        <?php if (!empty($room['romantic-packet']) && $room['romantic-packet'] == '1'): ?>
+                                                            <span class="feature-tag" style="background: #fce4ec; color: #c2185b;">
+                                                                <i class="bi bi-heart"></i> Romantik Paket
+                                                            </span>
+                                                        <?php endif; ?>
+                                                    </div>
                                                     <div class="big-reservation d-none">
                                                         <div class="reservation-schedule">
                                                             <h5 class="schedule-title">
@@ -770,7 +802,7 @@
                                                                 </small>
                                                             </div>
 
-                                                            <form action="POST">
+                                                            <form action="" method="post">
                                                                 <h5 class="schedule-title">
                                                                     <i class="fa-solid fa-calendar-plus"></i> Tarih Aralığı Seçiniz
                                                                 </h5>
@@ -786,31 +818,47 @@
                                                                 </div>
                                                             </form>
 
+
+                                                            <h5 class="schedule-title mt-3">
+                                                                <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
+                                                            </h5>
+
+                                                            <?php foreach ($rooms as $room): ?>
+
+                                                                <?php for ($capacity = 1; $capacity <= $room['capacity']; $capacity++): ?>
+                                                                    <div class="number-person"><?= number_format($capacity) ?></div>
+
+
+                                                                    <form action="" method="post">
+                                                                        <div class="row mb-3">
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <h6 class="mx-1">Ad</h6>
+                                                                                <input class="form-control" type="text" name="name">
+                                                                            </div>
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <h6 class="mx-1">Soyad</h6>
+                                                                                <input class="form-control" type="text" name="surname">
+                                                                            </div>
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <h6 class="mx-1">Doğum Tarihi</h6>
+                                                                                <input class="form-control" type="date" name="birthday">
+                                                                            </div>
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <h6 class="mx-1">Telefon No</h6>
+                                                                                <input class="form-control" type="number" name="phonenumber">
+                                                                            </div>
+                                                                            <div class="col-12 col-lg-6">
+                                                                                <h6 class="mx-1">Cinsiyet</h6>
+                                                                                <select name="sex" id="" class="form-control">
+                                                                                    <option value="girl">Kız</option>
+                                                                                    <option value="man">Erkek</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                <?php endfor; ?>
+                                                            <?php endforeach; ?>
                                                         </div>
-                                                    </div>
-
-                                                    <div class="room-features">
-                                                        <span class="feature-tag"><i class="bi bi-wifi px-1"></i>Wifi</span>
-                                                        <span class="feature-tag"><i class="bi bi-tv px-1"></i>Tv</span>
-                                                        <span class="feature-tag"><i class="bi bi-snow px-1"></i>Climate</span>
-                                                        <span class="feature-tag"><i class="bi bi-cup-hot px-1"></i>Minibar</span>
-                                                        <?php if (!empty($room['none-smoke']) && $room['none-smoke'] == '1'): ?>
-                                                            <span class="feature-tag" style="background: #e8f5e8; color: #2e7d32;">
-                                                                <i class="bi bi-shield-check"></i> Sigara İçilmeyen
-                                                            </span>
-                                                        <?php endif; ?>
-
-                                                        <?php if (!empty($room['engelli-erişimi']) && $room['engelli-erişimi'] == '1'): ?>
-                                                            <span class="feature-tag" style="background: #e3f2fd; color: #1976d2;">
-                                                                <i class="bi bi-universal-access"></i> Engelli Erişimi
-                                                            </span>
-                                                        <?php endif; ?>
-
-                                                        <?php if (!empty($room['romantic-packet']) && $room['romantic-packet'] == '1'): ?>
-                                                            <span class="feature-tag" style="background: #fce4ec; color: #c2185b;">
-                                                                <i class="bi bi-heart"></i> Romantik Paket
-                                                            </span>
-                                                        <?php endif; ?>
                                                     </div>
 
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -890,7 +938,7 @@
 
             setTimeout(() => {
                 closebutton.classList.remove("d-none");
-            },300)
+            }, 300)
 
 
             setTimeout(() => {

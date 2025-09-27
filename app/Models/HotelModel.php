@@ -41,8 +41,12 @@ class HotelModel
             try {
             $stmt = $this->db->prepare("
                 SELECT 
-                    *
-                FROM `rooms-table` 
+                    r.*,
+                    ps.`none-smoke`,
+                    ps.`engelli-erişimi`,
+                    ps.`romantic-packet`
+                FROM `rooms-table` r
+                LEFT JOIN `private-settings` ps ON r.id = ps.room_id
                 WHERE capacity = ?
             ");
             $stmt->execute([$capacity]);
