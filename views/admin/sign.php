@@ -1,117 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yapma</title>
+    <title>Hotel Admin - Giriş Yap</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+        :root {
+            --primary-color: #2F5336;
+            --secondary-color: #FFEED2;
+            --accent-color: #4CAF50;
+            --danger-color: #dc3545;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-radius: 20px;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
         }
 
-        section {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        section .wave {
+        body::before {
+            content: '';
             position: absolute;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #185227ff;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
-            transition: 0.5s;
-        }
-
-        section .wave span {
-            content: "";
-            position: absolute;
-            width: 325vh;
-            height: 325vh;
             top: 0;
-            left: 50%;
-            transform: translate(-50%, -75%);
-            background: #000;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1.5" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="1" fill="rgba(255,255,255,0.08)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+            opacity: 0.3;
         }
 
-        section .wave span:nth-child(1) {
-            border-radius: 45%;
-            background: rgba(20, 20, 20, 1);
-            animation: animate 5s linear infinite;
+        .login-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 0;
+            width: 100%;
+            max-width: 900px;
+            min-height: 450px;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
         }
 
-        section .wave span:nth-child(2) {
-            border-radius: 40%;
-            background: rgba(20, 20, 20, 0.5);
-            animation: animate 10s linear infinite;
+        .login-left {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
         }
 
-        section .wave span:nth-child(3) {
-            border-radius: 42.5%;
-            background: rgba(255, 255, 255, 1);
-            animation: animate 15s linear infinite;
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" fill="rgba(255,255,255,0.05)" rx="10"/></svg>') center/cover;
+            opacity: 0.1;
         }
 
-        @keyframes animate {
-            0% {
-                transform: translate(-50%, -75%) rotate(0deg);
+        .welcome-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-text h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hotel-icon {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+        }
+
+        .login-right {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+            background: white;
+            outline: none;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(47, 83, 54, 0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47, 83, 54, 0.4);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .forgot-password a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 20px;
+                max-width: 500px;
             }
 
-            100% {
-                transform: translate(-50%, -75%) rotate(360deg);
+            .login-left {
+                display: none;
             }
-        }
 
-        .sign-place {
-            background-color: #185227ff;
-            border-radius: 20px;
-            padding: 10px;
-            margin: 0 auto;
-            width: 40%;
-        }
+            .login-right {
+                padding: 2rem;
+            }
 
-        .sign-head {
-            color: #fff;
+            .welcome-text h2 {
+                font-size: 2rem;
+            }
+
+            .hotel-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
         }
     </style>
 
 </head>
 
 <body>
-
-    <div class="container">
-        <div class="signin-back">
-            <section>
-                <div class="wave">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+    <div class="login-container">
+        <div class="row g-0 h-100">
+            <!-- Left Side - Welcome Section -->
+            <div class="col-md-6 login-left">
+                <div class="welcome-text">
+                    <div class="hotel-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <h2>Hoş Geldiniz!</h2>
+                    <p>Hotel yönetim panelinize erişim için lütfen giriş yapın. Tüm rezervasyon ve oda işlemlerinizi buradan yönetebilirsiniz.</p>
                 </div>
-                <div class="sign-place">
-                    <h1 class="sign-head">Giriş Yap</h1>
-                    <hr>
-                    <input class="form-control w-50" type="text" name="" id="">
+            </div>
+            
+            <!-- Right Side - Login Form -->
+            <div class="col-md-6 login-right">
+                <div class="login-header">
+                    <h3>Admin Paneli</h3>
+                    <p>Hesabınızla giriş yapın</p>
                 </div>
-            </section>
-
-
+                
+                <form action="" method="post" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="username">
+                            <i class="bi bi-person"></i>
+                            Kullanıcı Adı
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="username" 
+                               name="username" 
+                               placeholder="Kullanıcı adınızı girin"
+                               required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <i class="bi bi-lock"></i>
+                            Şifre
+                        </label>
+                        <input type="password" 
+                               class="form-control" 
+                               id="password" 
+                               name="password" 
+                               placeholder="Şifrenizi girin"
+                               required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Giriş Yap
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username.trim() || !password.trim()) {
+                e.preventDefault();
+                alert('Lütfen tüm alanları doldurun!');
+            }
+        });
+        
+        // Input focus effects
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
+    </script>
 </body>
 
 </html>
