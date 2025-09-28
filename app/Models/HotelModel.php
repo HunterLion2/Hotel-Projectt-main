@@ -203,8 +203,7 @@ class HotelModel
         }
     }
 
-    public function getRoomByName($roomName)
-    {
+    public function getRoomByName($roomName){
         try {
             $stmt = $this->db->prepare("
                 SELECT 
@@ -223,6 +222,10 @@ class HotelModel
             error_log("getRoomByName error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function postReservationİnfo() {
+        
     }
 
 }

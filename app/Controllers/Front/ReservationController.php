@@ -22,7 +22,7 @@ class ReservationController extends BaseController
     {
         $rooms = [];
 
-        try {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (isset($this->db)) {
 
                 if (isset($_GET['filter_submitted']) && $_GET['filter_submitted'] == "1") {
@@ -56,13 +56,16 @@ class ReservationController extends BaseController
                     $rooms = $this->roomModel->getAllRoom();
                 }
             }
-        } catch (\Throwable $th) {
-            $rooms = $this->roomModel->getAllRoom();
+
+            $this->render('/front/reservation', [
+                'rooms' => $rooms
+            ]);
         }
 
-        $this->render('/front/reservation', [
-            'rooms' => $rooms
-        ]);
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return $this->createReservation();
+        }
+
 
         // Her yere render() yazmaktansa burada olduğu gibi bir tane liste değeri oluşturup içinide boş yaparsak sadece bu değeri çağırıp yazarız en sona da bu değerin aslında ne olduğunu yani bu değeri =>
 
@@ -72,7 +75,7 @@ class ReservationController extends BaseController
 
     }
 
-    public function getroomcapacity(){
+    public function createReservation() {
         
     }
 

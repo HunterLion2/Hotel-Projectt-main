@@ -564,6 +564,10 @@
             color: #fff;
             background-color: #2e7d32;
         }
+
+        .filter-close-button {
+            border-radius: 20px;
+        }
     </style>
 </head>
 
@@ -693,7 +697,7 @@
                             </div>
 
                             <span>
-                                <span class=""><button class="btn btn-danger filter-close-button d-none"><i class="fa-solid fa-filter-circle-xmark"></i> Filtreyi Kaldır</button></span>
+                                <span class=""><button class="btn btn-danger filter-close-button"><i class="fa-solid fa-filter-circle-xmark"></i> Filtreyi Kaldır</button></span>
 
                                 <span class="rooms-count">
                                     <i class="bi bi-house"></i> <?= count($rooms ?? []) ?> Oda Bulundu
@@ -710,7 +714,7 @@
                                         <!-- Hidden inputs for room data -->
                                         <input type="hidden" class="room-capacity" value="<?= $room['capacity'] ?>">
                                         <input type="hidden" class="room-id" value="<?= $room['id'] ?? '' ?>">
-                                        
+
                                         <div class="row g-0">
                                             <div class="col-md-4">
                                                 <div class="room-image">
@@ -806,7 +810,7 @@
                                                                 </small>
                                                             </div>
 
-                                                            <form action="" method="post">
+                                                            <form action="/reservation" method="post">
                                                                 <h5 class="schedule-title">
                                                                     <i class="fa-solid fa-calendar-plus"></i> Tarih Aralığı Seçiniz
                                                                 </h5>
@@ -827,11 +831,15 @@
                                                                 <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
                                                             </h5>
 
-                                                            <form action="" method="post">
+                                                            <form action="/reservation" method="post">
                                                                 <div id="person-forms-container" class="person-forms-container">
 
                                                                 </div>
-                                                                
+                                                                <div class="row">
+                                                                    <div class="col-lg-12 col-6">
+                                                                        <button class="btn btn-success reservation-button-end" type="submit" name="reservationButton" value="1">Rezerve Et</button>
+                                                                    </div>
+                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -844,12 +852,10 @@
                                                             <a href="#" class="reservation-link"><i class="bi bi-calendar-check"></i> Rezervasyon Yap</a>
                                                         </button>
                                                         <div class="row second-button-group d-none">
-                                                            <div class="col-5 col-lg-5">
+                                                            <div class="col-6 col-lg-6">
                                                                 <button class="btn btn-secondary" id="come-back-button" type="button">Geri Gel</button>
                                                             </div>
-                                                            <div class="col-5 col-lg-5">
-                                                                <button class="btn btn-success reservation-button" type="submit" name="reservationButton" value="1">Rezerve Et</button>
-                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -882,6 +888,7 @@
     <script>
         // Rezervasyon Bölümü Script
 
+        // Rezerve Bilgileri
 
         function generatePersonForm(personnumber) {
             return `
@@ -1039,12 +1046,12 @@
                 // Capacity'yi al ve form oluştur
                 const capacity = parseInt(currentRoomCard.querySelector('.room-capacity').value);
                 const container = currentRoomCard.querySelector('#person-forms-container');
-                
+
                 // Önceki formları temizle
                 container.innerHTML = '';
-                
+
                 // Capacity kadar form oluştur
-                for(let i = 1; i <= capacity; i++) {
+                for (let i = 1; i <= capacity; i++) {
                     container.innerHTML += generatePersonForm(i);
                 }
 
