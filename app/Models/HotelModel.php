@@ -224,8 +224,9 @@ class HotelModel
         }
     }
 
-    public function postReservationİnfo() {
-        
+    public function postReservationİnfo($name, $surname,$birthday,$phone,$sex,$first,$last) {
+        $stmt = $this->db->prepare("INSERT INTO date-informations (name, surname,birthday,phonenumber,sex,`first-sign`,`last-sign`) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        return $stmt->execute([$name, $surname, $birthday, $phone, $sex, $first, $last]);
     }
 
 }

@@ -817,11 +817,11 @@
                                                                 <div class="row">
                                                                     <div class="col-5 co-lg-5">
                                                                         <h6 class="mx-1">Giriş Tarihi</h6>
-                                                                        <input class="form-control" type="date" name="first-sign" id="">
+                                                                        <input class="form-control" type="date" name="first-sign" id="" required>
                                                                     </div>
                                                                     <div class="col-6 col-lg-5">
                                                                         <h6 class="mx-1">Çıkış Tarihi</h6>
-                                                                        <input class="form-control" type="date" name="last-sign" id="">
+                                                                        <input class="form-control" type="date" name="last-sign" id="" required>
                                                                     </div>
                                                                 </div>
                                                             </form>
@@ -922,28 +922,28 @@
 
         function generatePersonForm(personnumber) {
             return `
-                <div class="person-form-group mb-4" data-person="${personnumber}">
+                <div class="person-form-group mb-4" >
                     <div class="number-person">${personnumber}</div>
                     <div class="row mb-3">
                         <div class="col-12 col-lg-6">
                             <h6 class="mx-1">Ad</h6>
-                            <input class="form-control" type="text" name="persons[${personnumber}][name]" required>
+                            <input class="form-control" type="text" name="personsname" required>
                         </div>
                         <div class="col-12 col-lg-6">
                             <h6 class="mx-1">Soyad</h6>
-                            <input class="form-control" type="text" name="persons[${personnumber}][surname]" required>
+                            <input class="form-control" type="text" name="personssurname" required>
                         </div>
                         <div class="col-12 col-lg-6">
                             <h6 class="mx-1">Doğum Tarihi</h6>
-                            <input class="form-control" type="date" name="persons[${personnumber}][birthday]" required>
+                            <input class="form-control" type="date" name="personsbirthday" required>
                         </div>
                         <div class="col-12 col-lg-6">
                             <h6 class="mx-1">Telefon No</h6>
-                            <input class="form-control" type="number" name="persons[${personnumber}][phone]" required>
+                            <input class="form-control" type="number" name="personsphone" required>
                         </div>
                         <div class="col-12 col-lg-6">
                             <h6 class="mx-1">Cinsiyet</h6>
-                            <select name="persons[${personnumber}][gender]" class="form-control" required>
+                            <select name="personssex" class="form-control" required>
                                 <option value="">Seçiniz</option>
                                 <option value="female">Kız</option>
                                 <option value="male">Erkek</option>

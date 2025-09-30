@@ -77,28 +77,16 @@ class ReservationController extends BaseController
 
     public function createReservation() {
         
-    }
+        $name = $_POST['personsname'];
+        $surname = $_POST['personssurname'];
+        $birthday = $_POST['personsbirthday'];
+        $phone = $_POST['personsphone'];
+        $sex = $_POST['personssex'];
+        $first = $_POST['first-sign'];
+        $last = $_POST['last-sign'];
 
-    public function filterdeleted()
-    {
-
-        $data = [];
-
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-
-        if ($data['action'] === 'sil') {
-            // Buradaki fonksiyon senin yazdığın bir işlem olabilir
-            $rooms = $this->roomModel->getAllRoom();
-
-            $this->render('/front/reservation', [
-                'rooms' => $rooms
-            ]);
-
-            echo json_encode(['success' => true, 'message' => 'Silme işlemi tamamlandı.']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Geçersiz işlem.']);
-        }
+        $this->roomModel->postReservationİnfo($name, $surname,$birthday,$phone,$sex,$first,$last);
+        return header("Location: /reservation");
     }
 
     public function getRoomDetails()
