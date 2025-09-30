@@ -568,6 +568,24 @@
         .filter-close-button {
             border-radius: 20px;
         }
+
+        /* Alert danger */
+
+        .filter-close-button-alert {
+            border-radius: 15px;
+            border: 2px solid rgba(185, 0, 0, 1);
+            color: rgba(102, 0, 0, 1);
+            position: absolute;
+            text-align: center;
+            width: 600px;
+            height: 120px;
+            margin-top: 250px;
+            left: 450px;
+            background-color: rgba(185, 0, 0, 0.44);
+            top: 100px;
+            z-index: 999;
+            display: none;
+        }
     </style>
 </head>
 
@@ -582,6 +600,11 @@
         </div>
     </div>
 
+    <div class="filter-close-button-alert">
+        <div class="p-5">
+            <h3 class="">Filtreler Kaldırılmıştır</h3>
+        </div>
+    </div>
     <!-- Main Content -->
     <div class="container-modern">
         <div class="reservation-container">
@@ -686,6 +709,7 @@
 
                 <!-- Rooms Results -->
 
+
                 <div class="col-lg-8 col-xl-9">
                     <div class="rooms-container mb-3">
                         <div class="rooms-header">
@@ -695,6 +719,8 @@
                                 </button>
                                 <h2>Müsait Odalar</h2>
                             </div>
+
+
 
                             <span>
                                 <span class=""><button class="btn btn-danger filter-close-button"><i class="fa-solid fa-filter-circle-xmark"></i> Filtreyi Kaldır</button></span>
@@ -882,6 +908,12 @@
         </div>
     </div>
 
+    <div class="filter-close-button-alert animate__animated animate__bounceIn">
+        <div class="p-5">
+            <h3 class="">Filtreler Kaldırılmıştır</h3>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -894,25 +926,28 @@
             clearFilterForm();
 
             const filterclosebutton = document.querySelector(".filter-close-button");
-            filterclosebutton.classList.add("none")
+            filterclosebutton.classList.add("d-none")
 
-            window.location.href = '/reservation';
+            const transfer = window.location.href = '/reservation';
+
+            const filterclosealert = document.querySelector(".filter-close-button-alert");
+
+            filterclosealert.style.display = "block";
+
+            // 2.5 saniye sonra gizle ve sayfa yönlendir yap sorun var burda
+            setTimeout(() => {
+                filterclosealert.style.display = "none";
+                window.location.href = '/reservation';
+            }, 2500);
+
         });
 
         function clearFilterForm() {
 
             const filterForm = document.querySelector(".filter-card form");
 
-            filterForm.querySelectorAll('input[type="text"], input[type="number"],input[type="data"]').forEach(input => {
-                input.value = "";
-            });
-
-            filterForm.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-
             const hiddenInput = filterForm.querySelector('input[name="filter_submitted"]');
-            if(hiddenInput) {
+            if (hiddenInput) {
                 hiddenInput.remove();
             }
 
