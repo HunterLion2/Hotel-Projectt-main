@@ -888,6 +888,36 @@
     <script>
         // Rezervasyon Bölümü Script
 
+        // Filtrelemeyi-Kaldır
+
+        document.querySelector(".filter-close-button").addEventListener("click", function() {
+            clearFilterForm();
+
+            const filterclosebutton = document.querySelector(".filter-close-button");
+            filterclosebutton.classList.add("none")
+
+            window.location.href = '/reservation';
+        });
+
+        function clearFilterForm() {
+
+            const filterForm = document.querySelector(".filter-card form");
+
+            filterForm.querySelectorAll('input[type="text"], input[type="number"],input[type="data"]').forEach(input => {
+                input.value = "";
+            });
+
+            filterForm.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            const hiddenInput = filterForm.querySelector('input[name="filter_submitted"]');
+            if(hiddenInput) {
+                hiddenInput.remove();
+            }
+
+        }
+
         // Rezerve Bilgileri
 
         function generatePersonForm(personnumber) {
@@ -935,26 +965,24 @@
         // Filtereleme Metodlarını İptal Etme
 
         // Buraya yeni bir link oluşturulup eklenicek.
-        document.querySelector(".filter-close-button").addEventListener("click", function() {
-            fetch('ReservationController.php', { // AJAX Yöntemidir.
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action: 'sil'
-                })
-            }).then(response => response.json());
-        })
+        // document.querySelector(".filter-close-button").addEventListener("click", function() {
+        //     fetch('ReservationController.php', { // AJAX Yöntemidir.
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({
+        //             action: 'sil'
+        //         })
+        //     }).then(response => response.json());
+        // })
 
         document.querySelector(".filter-button").addEventListener("click", function(e) {
             e.preventDefault();
 
             const closebutton = document.querySelector(".filter-close-button");
 
-            setTimeout(() => {
-                closebutton.classList.remove("d-none");
-            }, 300)
+            closebutton.classList.remove("d-none");
 
 
             setTimeout(() => {
