@@ -853,7 +853,7 @@
                                                                     <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
                                                                 </h5>
 
-                                                                <input type="hidden" class="room-id" value="<?= $room['id'] ?? '' ?>">
+                                                                <input type="hidden" name="room_id" value="<?= $room['id'] ?? '' ?>">
 
                                                                 <div id="person-forms-container" class="person-forms-container">
 

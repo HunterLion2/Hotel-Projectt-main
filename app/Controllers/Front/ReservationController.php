@@ -83,7 +83,7 @@ class ReservationController extends BaseController
 
         $first = $_POST['first-sign'] ?? '';
         $last = $_POST['last-sign'] ?? '';
-        $room_id = $_POST['room-id'] ?? '';
+        $room_id = $_POST['room_id'] ?? ''; // burada ki id değeri sayesinde room-table da ki odalar ile bağlantı kurulabilecek
 
         $persons = $_POST['persons'] ?? [];
 
@@ -103,11 +103,11 @@ class ReservationController extends BaseController
             $success = false;
 
             foreach ($persons as $person) {
-                $name = $_POST['personsname'] ?? '';
-                $surname = $_POST['personssurname'] ?? '';
-                $birthday = $_POST['personsbirthday'] ?? '';
-                $phone = $_POST['personsphone'] ?? '';
-                $sex = $_POST['personssex'] ?? '';
+                $name = $person['personsname'] ?? '';
+                $surname = $person['personssurname'] ?? '';
+                $birthday = $person['personsbirthday'] ?? '';
+                $phone = $person['personsphone'] ?? '';
+                $sex = $person['personssex'] ?? '';
                 if (!empty($name) && !empty($surname)) {
                     $result = $this->roomModel->postReservationİnfo($name ,$room_id ,$surname, $birthday, $phone, $sex, $first, $last);
                     if ($result) {

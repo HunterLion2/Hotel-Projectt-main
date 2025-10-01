@@ -232,7 +232,7 @@ class HotelModel
 
     public function postReservationİnfo($name, $room_id,$surname, $birthday, $phone, $sex, $first, $last)
     {
-        $stmt = $this->db->prepare("INSERT INTO `date-information` (`name`, `room_id`, `surname`,`birthday`,`phonenumber`,`sex`,`first-sign`,`last-sign`) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        return $stmt->execute([$name, $surname, $birthday, $phone, $sex, $first, $last]);
+        $stmt = $this->db->prepare("INSERT INTO `date-information` (`name`, `room_id`, `surname`,`birthday`,`phonenumber`,`sex`,`first-sign`,`last-sign`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        return $stmt->execute([$name, $room_id, $surname, $birthday, $phone, $sex, $first, $last]);
     }
 }
