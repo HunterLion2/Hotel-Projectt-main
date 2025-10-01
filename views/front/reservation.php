@@ -586,6 +586,110 @@
             z-index: 999;
             display: none;
         }
+
+        /* Takvim */
+
+        .calendar {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Başlık kısmı: ay/yıl seçimi ve ileri/geri butonlar */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Açılır menülerin görünümü */
+        .calendar-header select {
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        /* İleri/geri butonları */
+        .calendar-header button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        /* Gün kutuları ızgara düzeni */
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        /* Gün ismi ve sayı kutuları */
+        .day-name,
+        .day {
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Haftanın günleri başlığı */
+        .day-name {
+            font-weight: bold;
+            color: #888;
+        }
+
+        /* Gün kutuları stil */
+        .day {
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        /* Bugünün dışındaki günlerde hover efekti */
+        .day:hover:not(.today) {
+            background: #e0e0e0;
+        }
+
+        /* Bugün için özel stil */
+        .today {
+            background: #ff5722;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #e64a19;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        /* Mobil cihazlar için uyumlu görünüm */
+        @media (max-width: 600px) {
+            .calendar {
+                padding: 15px;
+            }
+
+            .day,
+            .day-name {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+
+            .calendar-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .calendar-header select {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -785,43 +889,24 @@
                                                                 <i class="bi bi-calendar2-week"></i> Rezervasyon Takvimi
                                                             </h5>
                                                             <div class="schedule-table-container">
-                                                                <table class="table table-sm schedule-table">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Giriş Tarihi</th>
-                                                                            <th>Çıkış Tarihi</th>
-                                                                            <th>Durum</th>
-                                                                            <th>Gün Sayısı</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <!-- Örnek rezervasyon verileri - Gerçek veriler için PHP'den gelmeli -->
-                                                                        <tr>
-                                                                            <td><span class="date-badge">22 Eyl 2025</span></td>
-                                                                            <td><span class="date-badge">25 Eyl 2025</span></td>
-                                                                            <td><span class="status-badge occupied">Dolu</span></td>
-                                                                            <td><span class="days-badge">3 Gün</span></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td><span class="date-badge">28 Eyl 2025</span></td>
-                                                                            <td><span class="date-badge">02 Eki 2025</span></td>
-                                                                            <td><span class="status-badge occupied">Dolu</span></td>
-                                                                            <td><span class="days-badge">4 Gün</span></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td><span class="date-badge">05 Eki 2025</span></td>
-                                                                            <td><span class="date-badge">08 Eki 2025</span></td>
-                                                                            <td><span class="status-badge occupied">Dolu</span></td>
-                                                                            <td><span class="days-badge">3 Gün</span></td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td><span class="date-badge">12 Eki 2025</span></td>
-                                                                            <td><span class="date-badge">15 Eki 2025</span></td>
-                                                                            <td><span class="status-badge occupied">Dolu</span></td>
-                                                                            <td><span class="days-badge">3 Gün</span></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                                <div class="calendar">
+                                                                    <div class="calendar-header">
+                                                                        <!-- Geri butonu -->
+                                                                        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                                                                        <!-- Ay ve yıl seçiciler -->
+                                                                        <div>
+                                                                            <select id="monthSelect"></select>
+                                                                            <select id="yearSelect"></select>
+                                                                        </div>
+                                                                        <!-- İleri butonu -->
+                                                                        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                                                                    </div>
+                                                                    <!-- Gün isimleri kutuları -->
+                                                                    <div class="calendar-days" id="dayNames"></div>
+                                                                    <!-- Gün kutuları -->
+                                                                    <div class="calendar-days" id="days"></div>
+                                                                </div>
+
                                                             </div>
                                                             <div class="schedule-legend">
                                                                 <small class="text-muted">
@@ -913,6 +998,116 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Takvim
+
+        // Haftanın günleri kısaltmaları
+        const dayNames = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+
+        // HTML elementlerini seçiyoruz
+        const dayNamesContainer = document.getElementById('dayNames');
+        const daysContainer = document.getElementById('days');
+        const monthSelect = document.getElementById('monthSelect');
+        const yearSelect = document.getElementById('yearSelect');
+        let date = new Date(); // Mevcut tarih
+
+        // Ay ve yıl seçeneklerini doldur
+        function populateSelects() {
+            const months = [...Array(12).keys()].map(i => new Date(0, i).toLocaleString('tr-TR', {
+                month: 'long'
+            }));
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+
+            const currentYear = new Date().getFullYear();
+            for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+                const option = document.createElement('option');
+                option.value = y;
+                option.textContent = y;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        // Takvimi oluştur
+        function renderCalendar() {
+            date.setDate(1);
+            const month = date.getMonth();
+            const year = date.getFullYear();
+
+            // Ayın hangi günde başladığını bul
+            const firstDayIndex = date.getDay() === 0 ? 6 : date.getDay() - 1;
+            const lastDay = new Date(year, month + 1, 0).getDate();
+
+            // Seçicileri güncelle
+            monthSelect.value = month;
+            yearSelect.value = year;
+
+            daysContainer.innerHTML = '';
+
+            // Ay başına kadar boş kutular
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyDiv = document.createElement('div');
+                daysContainer.appendChild(emptyDiv);
+            }
+
+            // Günleri oluştur
+            for (let i = 1; i <= lastDay; i++) {
+                const day = document.createElement('div');
+                day.classList.add('day');
+                day.textContent = i;
+
+                // Bugün ise özel stil ver
+                const today = new Date();
+                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    day.classList.add('today');
+                }
+
+                daysContainer.appendChild(day);
+            }
+        }
+
+        // Gün isimlerini ekle
+        function renderDayNames() {
+            dayNames.forEach(name => {
+                const div = document.createElement('div');
+                div.classList.add('day-name');
+                div.textContent = name;
+                dayNamesContainer.appendChild(div);
+            });
+        }
+
+        // Ayı geri al
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            date.setMonth(date.getMonth() - 1);
+            renderCalendar();
+        });
+
+        // Ayı ileri al
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            date.setMonth(date.getMonth() + 1);
+            renderCalendar();
+        });
+
+        // Ay seçimi değiştiğinde takvimi güncelle
+        monthSelect.addEventListener('change', () => {
+            date.setMonth(parseInt(monthSelect.value));
+            renderCalendar();
+        });
+
+        // Yıl seçimi değiştiğinde takvimi güncelle
+        yearSelect.addEventListener('change', () => {
+            date.setFullYear(parseInt(yearSelect.value));
+            renderCalendar();
+        });
+
+        // İlk çalıştırma işlemleri
+        populateSelects();
+        renderDayNames();
+        renderCalendar();
+
         // Rezervasyon Bölümü Script
 
         document.querySelectorAll('.reservation-button-end').forEach(function(submitBtn) {
