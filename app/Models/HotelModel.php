@@ -16,8 +16,9 @@ class HotelModel
         $this->db = Database::getInstance();
     }
 
-    public function getAllRoom(){
-    
+    public function getAllRoom()
+    {
+
         try {
             $stmt = $this->db->prepare("
                 SELECT 
@@ -37,8 +38,9 @@ class HotelModel
         }
     }
 
-    public function capacityRoom($capacity){
-            try {
+    public function capacityRoom($capacity)
+    {
+        try {
             $stmt = $this->db->prepare("
                 SELECT 
                     r.*,
@@ -57,7 +59,8 @@ class HotelModel
         }
     }
 
-    public function twopricefilter($price, $capacity){
+    public function twopricefilter($price, $capacity)
+    {
         try {
             $stmt = $this->db->prepare("
                 SELECT 
@@ -78,7 +81,8 @@ class HotelModel
         }
     }
 
-    public function threepricefilter($price, $capacity){
+    public function threepricefilter($price, $capacity)
+    {
         try {
             $stmt = $this->db->prepare("
                 SELECT 
@@ -145,17 +149,16 @@ class HotelModel
             $stmt = $this->db->prepare($sql);
             $stmt->execute($params);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            
+
+
             return $result;
-
         } catch (Exception $e) {
-
         }
     }
 
     // ----------------------------------------------
-    public function privateromantic() {
+    public function privateromantic()
+    {
         try {
             $stmt = $this->db->prepare("
                 SELECT r.* 
@@ -171,7 +174,8 @@ class HotelModel
         }
     }
 
-    public function privatesmoke() {
+    public function privatesmoke()
+    {
         try {
             $stmt = $this->db->prepare("
                 SELECT r.* 
@@ -187,7 +191,8 @@ class HotelModel
         }
     }
 
-    public function privateengelli() {
+    public function privateengelli()
+    {
         try {
             $stmt = $this->db->prepare("
                 SELECT r.* 
@@ -203,7 +208,8 @@ class HotelModel
         }
     }
 
-    public function getRoomByName($roomName){
+    public function getRoomByName($roomName)
+    {
         try {
             $stmt = $this->db->prepare("
                 SELECT 
@@ -224,9 +230,9 @@ class HotelModel
         }
     }
 
-    public function postReservationİnfo($name, $surname,$birthday,$phone,$sex,$first,$last) {
-        $stmt = $this->db->prepare("INSERT INTO date-informations (name, surname,birthday,phonenumber,sex,`first-sign`,`last-sign`) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    public function postReservationİnfo($name, $room_id,$surname, $birthday, $phone, $sex, $first, $last)
+    {
+        $stmt = $this->db->prepare("INSERT INTO `date-information` (`name`, `room_id`, `surname`,`birthday`,`phonenumber`,`sex`,`first-sign`,`last-sign`) VALUES (?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([$name, $surname, $birthday, $phone, $sex, $first, $last]);
     }
-
 }

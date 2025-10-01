@@ -5,6 +5,7 @@ namespace App\Controllers\Front;
 use App\Core\BaseController;
 use App\Core\Database;
 use App\Models\HotelModel;
+use Exception;
 
 class ReservationController extends BaseController
 {
@@ -60,10 +61,12 @@ class ReservationController extends BaseController
             $this->render('/front/reservation', [
                 'rooms' => $rooms
             ]);
+            return;
         }
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            return $this->createReservation();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->createReservation();
+            return;
         }
 
 
@@ -75,18 +78,55 @@ class ReservationController extends BaseController
 
     }
 
-    public function createReservation() {
-        
-        $name = $_POST['personsname'];
-        $surname = $_POST['personssurname'];
-        $birthday = $_POST['personsbirthday'];
-        $phone = $_POST['personsphone'];
-        $sex = $_POST['personssex'];
-        $first = $_POST['first-sign'];
-        $last = $_POST['last-sign'];
+    public function createReservation()
+    {
 
-        $this->roomModel->postReservationİnfo($name, $surname,$birthday,$phone,$sex,$first,$last);
-        return header("Location: /reservation");
+        $first = $_POST['first-sign'] ?? '';
+        $last = $_POST['last-sign'] ?? '';
+        $room_id = $_POST['room-id'] ?? '';
+
+        $persons = $_POST['persons'] ?? [];
+
+        if (empty($first) || empty($last)) {
+            error_log("Tarih bilgileri eksik - first: $first, last: $last");
+            header("Location: /reservation?error=missing_dates");
+            exit;
+        }
+
+        if (empty($persons)) {
+            error_log("Kişi bilgileri eksik");
+            header("Location: /reservation?error=missing_persons");
+            exit;
+        }
+
+        try {
+            $success = false;
+
+            foreach ($persons as $person) {
+                $name = $_POST['personsname'] ?? '';
+                $surname = $_POST['personssurname'] ?? '';
+                $birthday = $_POST['personsbirthday'] ?? '';
+                $phone = $_POST['personsphone'] ?? '';
+                $sex = $_POST['personssex'] ?? '';
+                if (!empty($name) && !empty($surname)) {
+                    $result = $this->roomModel->postReservationİnfo($name ,$room_id ,$surname, $birthday, $phone, $sex, $first, $last);
+                    if ($result) {
+                        $success = true;
+                    }
+                }
+            }
+
+            if ($success) {
+                header("Location: /reservation?success=1");
+            } else {
+                header("Location: /reservation?error=no_valid_persons");
+            }
+            exit;
+        } catch (Exception $e) {
+            error_log("Reservation error: " . $e->getMessage());
+            header("Location: /reservation?error=database");
+            exit;
+        }
     }
 
     public function getRoomDetails()

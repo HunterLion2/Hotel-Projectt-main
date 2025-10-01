@@ -720,8 +720,6 @@
                                 <h2>Müsait Odalar</h2>
                             </div>
 
-
-
                             <span>
                                 <span class=""><button class="btn btn-danger filter-close-button"><i class="fa-solid fa-filter-circle-xmark"></i> Filtreyi Kaldır</button></span>
 
@@ -836,7 +834,7 @@
                                                                 </small>
                                                             </div>
 
-                                                            <form action="/reservation" method="post">
+                                                            <form action="/reservation" method="POST">
                                                                 <h5 class="schedule-title">
                                                                     <i class="fa-solid fa-calendar-plus"></i> Tarih Aralığı Seçiniz
                                                                 </h5>
@@ -850,14 +848,13 @@
                                                                         <input class="form-control" type="date" name="last-sign" id="" required>
                                                                     </div>
                                                                 </div>
-                                                            </form>
 
+                                                                <h5 class="schedule-title mt-3">
+                                                                    <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
+                                                                </h5>
 
-                                                            <h5 class="schedule-title mt-3">
-                                                                <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
-                                                            </h5>
+                                                                <input type="hidden" class="room-id" value="<?= $room['id'] ?? '' ?>">
 
-                                                            <form action="/reservation" method="post">
                                                                 <div id="person-forms-container" class="person-forms-container">
 
                                                                 </div>
@@ -888,8 +885,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
                                 <?php endforeach; ?>
 
                                 <?php if (count($rooms) == 0): ?>
@@ -919,6 +914,27 @@
 
     <script>
         // Rezervasyon Bölümü Script
+
+        document.querySelectorAll('.reservation-button-end').forEach(function(submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+                const form = this.closest('form');
+                const firstSign = form.querySelector('input[name="first-sign"]');
+                const lastSign = form.querySelector('input[name="last-sign"]');
+
+                // Validation
+                if (!firstSign || !firstSign.value) {
+                    e.preventDefault();
+                    alert('Lütfen giriş tarihini seçin!');
+                    return;
+                }
+
+                if (!lastSign || !lastSign.value) {
+                    e.preventDefault();
+                    alert('Lütfen çıkış tarihini seçin!');
+                    return;
+                }
+            });
+        });
 
         // Filtrelemeyi-Kaldır
 
@@ -957,35 +973,35 @@
 
         function generatePersonForm(personnumber) {
             return `
-                <div class="person-form-group mb-4" >
-                    <div class="number-person">${personnumber}</div>
-                    <div class="row mb-3">
-                        <div class="col-12 col-lg-6">
-                            <h6 class="mx-1">Ad</h6>
-                            <input class="form-control" type="text" name="personsname" required>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <h6 class="mx-1">Soyad</h6>
-                            <input class="form-control" type="text" name="personssurname" required>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <h6 class="mx-1">Doğum Tarihi</h6>
-                            <input class="form-control" type="date" name="personsbirthday" required>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <h6 class="mx-1">Telefon No</h6>
-                            <input class="form-control" type="number" name="personsphone" required>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <h6 class="mx-1">Cinsiyet</h6>
-                            <select name="personssex" class="form-control" required>
-                                <option value="">Seçiniz</option>
-                                <option value="female">Kız</option>
-                                <option value="male">Erkek</option>
-                            </select>
-                        </div>
-                    </div>
+        <div class="person-form-group mb-4" >
+            <div class="number-person">${personnumber}</div>
+            <div class="row mb-3">
+                <div class="col-12 col-lg-6">
+                    <h6 class="mx-1">Ad</h6>
+                    <input class="form-control" type="text" name="persons[${personnumber}][name]" required>
                 </div>
+                <div class="col-12 col-lg-6">
+                    <h6 class="mx-1">Soyad</h6>
+                    <input class="form-control" type="text" name="persons[${personnumber}][surname]" required>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <h6 class="mx-1">Doğum Tarihi</h6>
+                    <input class="form-control" type="date" name="persons[${personnumber}][birthday]" required>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <h6 class="mx-1">Telefon No</h6>
+                    <input class="form-control" type="number" name="persons[${personnumber}][phone]" required>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <h6 class="mx-1">Cinsiyet</h6>
+                    <select name="persons[${personnumber}][gender]" class="form-control" required>
+                        <option value="">Seçiniz</option>
+                        <option value="female">Kız</option>
+                        <option value="male">Erkek</option>
+                    </select>
+                </div>
+            </div>
+        </div>
             `;
         }
 
