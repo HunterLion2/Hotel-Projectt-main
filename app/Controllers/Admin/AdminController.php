@@ -28,7 +28,7 @@ class AdminController extends BaseController
 
         $data = [];
 
-        $data = $this->roomModel->getAllRoomCount();
+        $data = $this->roomModel->countTotalPrice();
 
         // header("Location : sign.php");
         // exit; 502 Hatası veriyor buna bakıcam.

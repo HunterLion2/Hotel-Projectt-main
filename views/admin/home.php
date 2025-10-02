@@ -209,43 +209,47 @@
     <div class="container">
         <!-- İstatistik Kartları -->
         <div class="row">
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon revenue-card">
-                        <i class="bi bi-currency-dollar "></i>
-                    </div>
-                    <div class="stats-number">₺4.2M</div>
-                    <div class="stats-label">Toplam Gelir</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon booking-card">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="stats-number">1,250</div>
-                    <div class="stats-label">Rezervasyon</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card text-center">
-                    <div class="progress-ring mx-auto" style="--progress: 78.5">
-                        <div class="progress-ring-circle">
-                            <div class="progress-text">78.5%</div>
+            <?php foreach ($data as $datas): ?>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon revenue-card">
+                            <i class="bi bi-currency-dollar "></i>
                         </div>
+                        <div class="stats-number">₺<?= number_format($datas['sumtotal']) ?></div>
+                        <div class="stats-label">Toplam Gelir</div>
                     </div>
-                    <div class="stats-label mt-2">Doluluk Oranı</div>
                 </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="stats-card">
-                    <div class="stats-icon rooms-card">
-                        <i class="bi bi-house"></i>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon booking-card">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <div class="stats-number"><?= number_format($datas['reservation']) ?></div>
+                        <div class="stats-label">Rezervasyon</div>
                     </div>
-                    <div class="stats-number"><?= $data[0]["COUNT('room-name')"] ?></div>
-                    <div class="stats-label">Toplam Oda</div>
                 </div>
-            </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card text-center">
+                        <div class="progress-ring mx-auto" style="--progress: <?= number_format($datas['percenttotal']) ?>">
+                            <div class="progress-ring-circle">
+                                <div class="progress-text"><?= number_format($datas['percenttotal']) ?>%</div>
+                            </div>
+                        </div>
+                        <div class="stats-label mt-2">Doluluk Oranı</div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="stats-card">
+                        <div class="stats-icon rooms-card">
+                            <i class="bi bi-house"></i>
+                        </div>
+                        <div class="stats-number"><?= number_format($datas['totalroom']) ?></div>
+                        <div class="stats-label">Toplam Oda</div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+
         </div>
 
         <!-- Grafikler -->

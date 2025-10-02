@@ -112,8 +112,6 @@
                 <input type="number" name="price" id="" class="form-control w-50 m-2" placeholder="Fiyat Bilgisi Giriniz">
                 <input type="text" name="explanation" id="" class="form-control w-50 m-2" placeholder="Oda Açıklaması Giriniz">
                 <input type="text" name="room-name" id="" class="form-control w-50 m-2" placeholder="Oda İsmi Giriniz">
-
-                
             </form>
         </div>
     </div>

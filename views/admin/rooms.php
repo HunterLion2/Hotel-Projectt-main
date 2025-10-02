@@ -99,7 +99,7 @@
     <!-- Dashboard Header -->
     <div class="dashboard-header">
         <div class="container">
-            <h1><i class="bi bi-plus-circle"></i> Oda Ekleme</h1>
+            <h1><i class="bi bi-plus-circle"></i> Odalar</h1>
         </div>
     </div>
     <div class="section-area">
@@ -115,6 +115,7 @@
         <table class="table">
             <thead class="thead-light">
                 <tr>
+                    <th scope="col" class="text-center">İd</th>
                     <th scope="col" class="text-center">Oda İsimleri</th>
                     <th scope="col" class="text-center">Kapasite</th>
                     <th scope="col" class="text-center">Rezervasyon Ücreti</th>
@@ -124,6 +125,7 @@
             <tbody>
                 <?php foreach ($rooms as $room): ?>
                     <tr>
+                        <td class="text-center"><?= htmlspecialchars($room["id"]) ?></td>
                         <td class="text-center"><?= htmlspecialchars($room["room-name"]) ?></td>
                         <td class="text-center"><?= number_format($room["capacity"]) ?></td>
                         <td class="text-center"><?= number_format($room["price"]) ?></td>
