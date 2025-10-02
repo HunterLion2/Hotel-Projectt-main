@@ -230,9 +230,26 @@ class HotelModel
         }
     }
 
-    public function postReservationİnfo($name, $room_id,$surname, $birthday, $phone, $sex, $first, $last)
+    public function postReservationİnfo($name, $room_id, $surname, $birthday, $phone, $sex, $first, $last)
     {
-        $stmt = $this->db->prepare("INSERT INTO `date-information` (`name`, `room_id`, `surname`,`birthday`,`phonenumber`,`sex`,`first-sign`,`last-sign`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        return $stmt->execute([$name, $room_id, $surname, $birthday, $phone, $sex, $first, $last]);
+        try {
+            $stmt = $this->db->prepare("
+            INSERT INTO `date-information` 
+            (`name`, `room_id`, `surname`, `birthday`, `phonenumber`, `sex`, `first-sign`, `last-sign`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+            $result = $stmt->execute([$name, $room_id, $surname, $birthday, $phone, $sex, $first, $last]);
+
+            if (!$result) {
+                error_log("Database insert failed: " . print_r($stmt->errorInfo(), true));
+                throw new Exception("Veritabanı kayıt hatası");
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            error_log("postReservationİnfo error: " . $e->getMessage());
+            throw $e;
+        }
     }
 }

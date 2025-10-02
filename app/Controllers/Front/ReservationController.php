@@ -103,11 +103,11 @@ class ReservationController extends BaseController
             $success = false;
 
             foreach ($persons as $person) {
-                $name = $person['personsname'] ?? '';
-                $surname = $person['personssurname'] ?? '';
-                $birthday = $person['personsbirthday'] ?? '';
-                $phone = $person['personsphone'] ?? '';
-                $sex = $person['personssex'] ?? '';
+                $name = $person['name'] ?? '';
+                $surname = $person['surname'] ?? '';
+                $birthday = $person['birthday'] ?? '';
+                $phone = $person['phone'] ?? '';
+                $sex = $person['gender'] ?? '';
                 if (!empty($name) && !empty($surname)) {
                     $result = $this->roomModel->postReservationİnfo($name ,$room_id ,$surname, $birthday, $phone, $sex, $first, $last);
                     if ($result) {
