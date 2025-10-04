@@ -827,7 +827,7 @@
                             <span>
                                 <span class=""><button class="btn btn-danger filter-close-button"><i class="fa-solid fa-filter-circle-xmark"></i> Filtreyi Kaldır</button></span>
 
-                                <span class="rooms-count">
+                                <span class="rooms-count fiend-room">
                                     <i class="bi bi-house"></i> <?= count($rooms ?? []) ?> Oda Bulundu
                                 </span>
                             </span>
@@ -1309,6 +1309,8 @@
                 const filterallcard = document.querySelector('.filter-card');
                 const filterallcardwh = document.querySelector('.filter-card-wh');
                 const roomContainer = document.querySelector('.col-lg-8.col-xl-9');
+                const roomfind = document.querySelector('.fiend-room');
+                const filterclose = document.querySelector('.filter-close-button');
                 const filter = document.querySelector('.filtreleme');
 
                 // Tıklanan butonun bulunduğu room-card'ı bul
@@ -1334,6 +1336,8 @@
                 setTimeout(() => {
                     filterallcardwh.classList.remove('col-lg-4', 'col-xl-3');
                     filterallcardwh.classList.add('d-none');
+                    roomfind.classList.add('d-none');
+                    filterclose.classList.add('d-none');
 
                     // Sadece tıklanan odanın butonlarını değiştir
                     currentReservationButton.classList.add('d-none');
