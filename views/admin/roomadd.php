@@ -98,10 +98,9 @@
     </div>
     <div class="section-area">
         <a href="/adminhotel" class="room-add-link">İstatistikler</a>
-        <a href="/adminhotelrooms" class="room-add-link">Odalar</a>
-        <a href="/adminhotelroomadd" class="room-add-link selected">Oda Ekleme</a>
+        <a href="/adminhotel/adminhotelrooms" class="room-add-link">Odalar</a>
+        <a href="/adminhotel/adminhotelroomadd" class="room-add-link selected">Oda Ekleme</a>
         <a href="/adminhotel/adminusers" class="room-add-link">Kullanıcılar</a>
-        <a href="" class="room-add-link">Rezerve Odalar</a>
     </div>
 
 

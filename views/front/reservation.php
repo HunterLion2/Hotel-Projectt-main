@@ -1015,6 +1015,7 @@
             const months = [...Array(12).keys()].map(i => new Date(0, i).toLocaleString('tr-TR', {
                 month: 'long'
             }));
+            
             months.forEach((month, index) => {
                 const option = document.createElement('option');
                 option.value = index;

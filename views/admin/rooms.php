@@ -93,63 +93,139 @@
         margin-bottom: 20px;
         opacity: 0.5;
     }
+
+    .chart-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #343a40;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+    .small-chart-container canvas {
+        max-height: 250px !important;
+        height: 250px !important;
+    }
+
+    .chart-container canvas {
+        max-height: 400px !important;
+        height: 400px !important;
+    }
+
+    .chart-container {
+        min-height: 400px;
+        max-height: 450px;
+        overflow: hidden;
+    }
+
 </style>
 
 <body>
     <!-- Dashboard Header -->
     <div class="dashboard-header">
         <div class="container">
-            <h1><i class="bi bi-plus-circle"></i> Odalar</h1>
+            <h1><i class="bi bi-plus-circle"></i> Oda Ayrıntıları</h1>
         </div>
     </div>
     <div class="section-area">
         <a href="/adminhotel" class="room-add-link">İstatistikler</a>
         <a href="/adminhotelrooms" class="room-add-link selected">Odalar</a>
-        <a href="/adminhotelroomadd" class="room-add-link ">Oda Ekleme</a>
+        <a href="/adminhotel/adminhotelroomadd" class="room-add-link ">Oda Ekleme</a>
         <a href="/adminhotel/adminusers" class="room-add-link">Kullanıcılar</a>
-        <a href="" class="room-add-link">Rezerve Odalar</a>
     </div>
 
 
     <div class="container">
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col" class="text-center">İd</th>
-                    <th scope="col" class="text-center">Oda İsimleri</th>
-                    <th scope="col" class="text-center">Kapasite</th>
-                    <th scope="col" class="text-center">Rezervasyon Ücreti</th>
-                    <th scope="col" class="text-center">Durum</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($rooms as $room): ?>
-                    <tr>
-                        <td class="text-center"><?= htmlspecialchars($room["id"]) ?></td>
-                        <td class="text-center"><?= htmlspecialchars($room["room-name"]) ?></td>
-                        <td class="text-center"><?= number_format($room["capacity"]) ?></td>
-                        <td class="text-center"><?= number_format($room["price"]) ?></td>
-                        <?php if ($room["Durum"] == "Dolu"): ?>
-                            <td class="text-center">
-                                <p class="alert alert-danger info"><?= htmlspecialchars($room["Durum"]) ?></p>
-                            </td>
-                        <?php endif; ?>
-                        <td class="text-center">
-                            <p class="alert alert-success info"><?= htmlspecialchars($room["Durum"]) ?></p>
-                        </td>
-                    </tr>
-
-                    <?php if (isset($rooms) == null): ?>
-                        <div class="empty-state">
-                            <i class="bi bi-house-x"></i>
-                            <h3>Üzgünüz, Oda Bilgilerine Ulaşılamıyor</h3>
-                        </div>
-                    <?php endif; ?>
-
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <i class="bi bi-bar-chart"></i> Oda Rezerve Ayrıntıları
+                    </h3>
+                    <div>
+                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                    </div>
+                    <div>
+                        <canvas id="revenueChart2" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+
+        const salesData = {
+            monthly: {
+                labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+                data: [12, 19, 15, 25, 22, 30, 35, 32, 28, 24, 18, 16],
+                revenue: [180000, 285000, 225000, 375000, 330000, 450000, 525000, 480000, 420000, 360000, 270000, 240000]
+            }
+        };
+
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'bar',
+            data: {
+                labels: salesData.monthly.labels,
+                datasets: [{
+                    label: 'Standart',
+                    data: salesData.monthly.revenue,
+                    backgroundColor: '#4CAF5080',
+                    borderColor: '#4CAF50',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '₺' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('revenueChart2'), {
+            type: 'bar',
+            data: {
+                labels: salesData.monthly.labels,
+                datasets: [{
+                    label: 'Deluxe',
+                    data: salesData.monthly.revenue,
+                    backgroundColor: '#a6b04880',
+                    borderColor: '#99af4cff',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '₺' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+
 
 </body>
 
