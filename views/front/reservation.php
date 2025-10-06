@@ -505,7 +505,7 @@
         }
 
         .status-badge.occupiednot {
-            background: #d88236ff;
+            background: #828282ff;
             color: #c62828;
         }
 
@@ -721,6 +721,60 @@
             .calendar-header select {
                 width: 100%;
             }
+        }
+
+        /* Geçmiş tarihler için stil */
+        .day.past-date {
+            background: #f5f5f5 !important;
+            color: #ccc !important;
+            cursor: not-allowed !important;
+            position: relative;
+            opacity: 0.5;
+        }
+
+        /* Geçmiş tarih üzerine çizgi */
+        .day.past-date::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #ccc;
+            transform: translateY(-50%);
+        }
+
+        /* Bugün için stil (güncellenmiş) */
+        .day.today {
+            background: #ff5722 !important;
+            color: white !important;
+            font-weight: bold;
+            border: 2px solid #e64a19;
+            transform: scale(1.05);
+            cursor: pointer;
+            /* Bugün tıklanabilir */
+        }
+
+        /* Seçili gün için stil */
+        .day.selected {
+            background: #4CAF50 !important;
+            color: white !important;
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        /* Gelecek tarihler için hover efekti */
+        .day:hover:not(.past-date):not(.selected):not(.today) {
+            background: #e8f5e8 !important;
+            color: #2e7d32;
+            cursor: pointer;
+        }
+
+        /* Geçmiş tarihler hover'da değişmesin */
+        .day.past-date:hover {
+            background: #f5f5f5 !important;
+            color: #ccc !important;
+            transform: none !important;
         }
     </style>
 </head>
@@ -1071,6 +1125,9 @@
 
             daysContainer.innerHTML = '';
 
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];
+
             // Ay başına kadar boş kutular
             for (let i = 0; i < firstDayIndex; i++) {
                 const emptyDiv = document.createElement('div');
@@ -1082,25 +1139,52 @@
                 const day = document.createElement('div');
                 day.classList.add('day');
                 day.textContent = i;
-                day.setAttribute('data-date', `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`);
 
-                day.addEventListener("click", function(e) {
-                    document.querySelectorAll('.day.selected').forEach(selectedDay => {
-                        selectedDay.classList.remove('selected');
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                day.setAttribute('data-date', dateString);
+
+                // ✅ Geçmiş tarih kontrolü
+                if (dateString < todayString) {
+                    // Geçmiş tarih - devre dışı bırak
+                    day.classList.add('past-date');
+                    day.style.pointerEvents = 'none'; // Tıklanamaz yap
+                } else {
+                    // Gelecek tarih - normal işleyiş
+                    day.addEventListener("click", function(e) {
+                        // Önceki seçimleri temizle
+                        document.querySelectorAll('.day.selected').forEach(selectedDay => {
+                            selectedDay.classList.remove('selected');
+                        });
+
+                        // Yeni seçimi ekle
+                        this.classList.add("selected");
+
+                        // Tarih input'larını güncelle
+                        const dateString = this.getAttribute('data-date');
+                        updateDateInputs(dateString);
                     });
-
-                    var firstdayinfo = day.textContent;
-
-
-                    // Yeni seçimi ekle
-                    this.classList.add("selected");
-
-                    // Tarih input'larını güncelle
-                    const dateString = this.getAttribute('data-date');
-                    updateDateInputs(dateString);
-                });
+                }
 
                 daysContainer.appendChild(day);
+            }
+        }
+
+        function updateDateInputs(selectedDate) {
+            const firstSignInput = document.querySelector('input[name="first-sign"]');
+            const lastSignInput = document.querySelector('input[name="last-sign"]');
+
+            if (firstSignInput && lastSignInput) {
+                if (!firstSignInput.value) {
+                    // İlk tarih seçimi
+                    firstSignInput.value = selectedDate;
+                } else if (!lastSignInput.value) {
+                    // İkinci tarih seçimi
+                    lastSignInput.value = selectedDate;
+                } else {
+                    // Yeni seçim - ilk tarihi sıfırla
+                    firstSignInput.value = selectedDate;
+                    lastSignInput.value = '';
+                }
             }
         }
 
