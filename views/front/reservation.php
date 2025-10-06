@@ -455,13 +455,6 @@
             gap: 8px;
         }
 
-        .schedule-table-container {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
         .schedule-table {
             margin: 0;
             font-size: 0.85rem;
@@ -507,13 +500,18 @@
         }
 
         .status-badge.occupied {
-            background: #ffebee;
+            background: #ffb7c2ff;
+            color: #c62828;
+        }
+
+        .status-badge.occupiednot {
+            background: #d88236ff;
             color: #c62828;
         }
 
         .status-badge.available {
-            background: #e8f5e8;
-            color: #2e7d32;
+            background: #2F5336;
+            color: #2F5336;
         }
 
         .days-badge {
@@ -595,7 +593,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 100%;
-            max-width: 500px;
         }
 
         /* Başlık kısmı: ay/yıl seçimi ve ileri/geri butonlar */
@@ -606,6 +603,7 @@
             margin-bottom: 10px;
             flex-wrap: wrap;
             gap: 10px;
+
         }
 
         /* Açılır menülerin görünümü */
@@ -629,11 +627,35 @@
         .calendar-days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 10px;
+            width: 100%;
             margin-top: 10px;
         }
 
         /* Gün ismi ve sayı kutuları */
+
+        /* Seçili gün için stil */
+        .day.selected {
+            background: #4CAF50 !important;
+            color: white !important;
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        /* select-date class'ını da ekleyebilirsiniz */
+        .day.select-date {
+            background: #2F5336 !important;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        /* Hover efekti */
+        .day:hover:not(.selected) {
+            background: #e8f5e8 !important;
+            color: #2e7d32;
+            cursor: pointer;
+        }
+
         .day-name,
         .day {
             text-align: center;
@@ -669,7 +691,17 @@
             pointer-events: none;
         }
 
-        /* Mobil cihazlar için uyumlu görünüm */
+        /* Takvim Bilgileri Silme Tuşu */
+
+        .calender-format {
+            border: none;
+            background-color: red;
+            color: #fff;
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 600px) {
             .calendar {
                 padding: 15px;
@@ -871,18 +903,30 @@
                                                     </div>
                                                     <div class="big-reservation d-none">
                                                         <div class="reservation-schedule">
-                                                            <h5 class="schedule-title">
-                                                                <i class="bi bi-calendar2-week"></i> Rezervasyon Takvimi
-                                                            </h5>
+                                                            <div class="row">
+                                                                <div class="col-10">
+                                                                    <h5 class="schedule-title mt-2">
+                                                                        <i class="bi bi-calendar2-week"></i> Rezervasyon Takvimi
+                                                                    </h5>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <button class="calender-format"><i class="fa-solid fa-filter-circle-xmark"></i></button>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="schedule-table-container">
                                                                 <div class="calendar">
                                                                     <div class="calendar-header">
                                                                         <!-- Geri butonu -->
                                                                         <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
                                                                         <!-- Ay ve yıl seçiciler -->
-                                                                        <div>
-                                                                            <select id="monthSelect"></select>
-                                                                            <select id="yearSelect"></select>
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <select id="monthSelect" class="form-control"></select>
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <select id="yearSelect" class="form-control"></select>
+                                                                            </div>
                                                                         </div>
                                                                         <!-- İleri butonu -->
                                                                         <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
@@ -892,10 +936,12 @@
                                                                     <!-- Gün kutuları -->
                                                                     <div class="calendar-days" id="days"></div>
                                                                 </div>
-
                                                             </div>
                                                             <div class="schedule-legend">
                                                                 <small class="text-muted">
+                                                                    <span class="legend-item">
+                                                                        <span class="status-badge occupiednot"></span> Rezerve Edilemez
+                                                                    </span>
                                                                     <span class="legend-item">
                                                                         <span class="status-badge occupied"></span> Rezerve Edilmiş
                                                                     </span>
@@ -906,19 +952,9 @@
                                                             </div>
 
                                                             <form action="/reservation" method="POST">
-                                                                <h5 class="schedule-title">
-                                                                    <i class="fa-solid fa-calendar-plus"></i> Tarih Aralığı Seçiniz
-                                                                </h5>
-                                                                <div class="row">
-                                                                    <div class="col-5 co-lg-5">
-                                                                        <h6 class="mx-1">Giriş Tarihi</h6>
-                                                                        <input class="form-control" type="date" name="first-sign" id="" required>
-                                                                    </div>
-                                                                    <div class="col-6 col-lg-5">
-                                                                        <h6 class="mx-1">Çıkış Tarihi</h6>
-                                                                        <input class="form-control" type="date" name="last-sign" id="" required>
-                                                                    </div>
-                                                                </div>
+                                                                <!-- Yukarıda seçtiğim gün bilgilerini buradaki inputun içerisine yerleştiricem. -->
+                                                                <input class="form-control" type="hidden" name="first-sign" id="" required>
+                                                                <input class="form-control" type="hidden" name="last-sign" id="" required>
 
                                                                 <h5 class="schedule-title mt-3">
                                                                     <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
@@ -1001,7 +1037,7 @@
             const months = [...Array(12).keys()].map(i => new Date(0, i).toLocaleString('tr-TR', {
                 month: 'long'
             }));
-            
+
             months.forEach((month, index) => {
                 const option = document.createElement('option');
                 option.value = index;
@@ -1017,6 +1053,7 @@
                 yearSelect.appendChild(option);
             }
         }
+
 
         // Takvimi oluştur
         function renderCalendar() {
@@ -1045,12 +1082,23 @@
                 const day = document.createElement('div');
                 day.classList.add('day');
                 day.textContent = i;
+                day.setAttribute('data-date', `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`);
 
-                // Bugün ise özel stil ver
-                const today = new Date();
-                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    day.classList.add('today');
-                }
+                day.addEventListener("click", function(e) {
+                    document.querySelectorAll('.day.selected').forEach(selectedDay => {
+                        selectedDay.classList.remove('selected');
+                    });
+
+                    var firstdayinfo = day.textContent;
+
+
+                    // Yeni seçimi ekle
+                    this.classList.add("selected");
+
+                    // Tarih input'larını güncelle
+                    const dateString = this.getAttribute('data-date');
+                    updateDateInputs(dateString);
+                });
 
                 daysContainer.appendChild(day);
             }
