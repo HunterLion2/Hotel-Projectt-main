@@ -59,53 +59,11 @@ class HotelModel
         }
     }
 
-    public function twopricefilter($price, $capacity)
-    {
-        try {
-            $stmt = $this->db->prepare("
-                SELECT 
-                    r.*,
-                    ps.`none-smoke`,
-                    ps.`engelli-erişimi`,
-                    ps.`romantic-packet`
-                FROM `rooms-table` r
-                LEFT JOIN `private-settings` ps ON r.id = ps.room_id
-                WHERE r.price <= ? AND r.capacity = ?
-                ORDER BY r.price ASC
-            ");
-            $stmt->execute([$price, $capacity]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            error_log("twopricefilter error: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    public function threepricefilter($price, $capacity)
-    {
-        try {
-            $stmt = $this->db->prepare("
-                SELECT 
-                    r.*,
-                    ps.`none-smoke`,
-                    ps.`engelli-erişimi`,
-                    ps.`romantic-packet`
-                FROM `rooms-table` r
-                LEFT JOIN `private-settings` ps ON r.id = ps.room_id
-                WHERE r.price <= ? AND r.capacity = ?
-                ORDER BY r.price ASC
-            ");
-            $stmt->execute([$price, $capacity]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            error_log("threepricefilter error: " . $e->getMessage());
-            return [];
-        }
-    }
-
     // Burası halloldu.
-    public function filterWithSpecialFeatures($capacity = null, $price = null, $noneSmoke = false, $disabledAccess = false, $romanticPacket = false)
+    public function filterWithSpecialFeatures($capacity = null, $noneSmoke = false, $disabledAccess = false, $romanticPacket = false)
     {
+
+        // Buradaki 1=1 değeri sql sorgusu içerisinde her zaman true değeri döndürür.
         try {
             $sql = "
                 SELECT DISTINCT
@@ -127,11 +85,6 @@ class HotelModel
                     $sql .= " AND r.capacity = ?";
                     $params[] = (int)$capacity;
                 }
-            }
-
-            if ($price && $price > 0) {
-                $sql .= " AND r.price <= ?";
-                $params[] = $price;
             }
 
             if ($noneSmoke) {

@@ -759,20 +759,6 @@
                                 </div>
                             </div>
 
-                            <!-- Price Range -->
-                            <div class="filter-section">
-                                <h3><i class="bi bi-currency-dollar"></i> Maksimum Fiyat</h3>
-                                <div class="input-group">
-                                    <input type="number"
-                                        name="price-filter"
-                                        class="form-control"
-                                        placeholder="Maksimum fiyat"
-                                        value="<?= $_GET['price-filter'] ?? '' ?>"
-                                        min="0">
-                                    <span class="input-group-text">₺</span>
-                                </div>
-                            </div>
-
                             <!-- Extra Packages -->
                             <div class="filter-section">
                                 <h3><i class="bi bi-star"></i> Özel Özellikler</h3>

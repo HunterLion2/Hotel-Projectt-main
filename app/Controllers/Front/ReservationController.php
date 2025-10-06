@@ -35,20 +35,12 @@ class ReservationController extends BaseController
                     $romanticPacket = isset($_GET['romantic-packet']);
 
                     if ($noneSmoke || $disabledAccess || $romanticPacket) { // ++
-                        $rooms = $this->roomModel->filterWithSpecialFeatures($capacity, $priceFilter, $noneSmoke, $disabledAccess, $romanticPacket);
+                        $rooms = $this->roomModel->filterWithSpecialFeatures($capacity, $noneSmoke, $disabledAccess, $romanticPacket);
                     } else if (isset($capacity)) { // - -
                         if ($capacity == 2) { // Buradaki hata (==) değeriydi bu değer yerine = kullanırsak bunun anlamı aslında ya doğrudur ya doğru bu doğru olana kadar aşşağıya geçme demektir bu.Bunu yapmak istersek (=) kullanmamız lazımdır.
-                            if (!empty($priceFilter)) {
-                                $rooms = $this->roomModel->twopricefilter($priceFilter, $capacity);
-                            } else {
-                                $rooms = $this->roomModel->capacityRoom($capacity);
-                            }
+                            $rooms = $this->roomModel->capacityRoom($capacity);
                         } else if ($capacity == 3) {
-                            if (!empty($priceFilter)) {
-                                $rooms = $this->roomModel->threepricefilter($priceFilter, $capacity);
-                            } else {
-                                $rooms = $this->roomModel->capacityRoom($capacity);
-                            }
+                            $rooms = $this->roomModel->capacityRoom($capacity);
                         }
                     } else {
                         $rooms = $this->roomModel->getAllRoom();
@@ -109,7 +101,7 @@ class ReservationController extends BaseController
                 $phone = $person['phone'] ?? '';
                 $sex = $person['gender'] ?? '';
                 if (!empty($name) && !empty($surname)) {
-                    $result = $this->roomModel->postReservationİnfo($name ,$room_id ,$surname, $birthday, $phone, $sex, $first, $last);
+                    $result = $this->roomModel->postReservationİnfo($name, $room_id, $surname, $birthday, $phone, $sex, $first, $last);
                     if ($result) {
                         $success = true;
                     }
