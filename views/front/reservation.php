@@ -963,9 +963,6 @@
                                                                         <i class="bi bi-calendar2-week"></i> Rezervasyon Takvimi
                                                                     </h5>
                                                                 </div>
-                                                                <div class="col-2">
-                                                                    <button class="calender-format"><i class="fa-solid fa-filter-circle-xmark"></i></button>
-                                                                </div>
                                                             </div>
 
                                                             <div class="schedule-table-container">
@@ -1145,19 +1142,21 @@
 
                 // ✅ Geçmiş tarih kontrolü
                 if (dateString < todayString) {
-                    // Geçmiş tarih - devre dışı bırak
                     day.classList.add('past-date');
                     day.style.pointerEvents = 'none'; // Tıklanamaz yap
                 } else {
-                    // Gelecek tarih - normal işleyiş
-                    day.addEventListener("click", function(e) {
-                        // Önceki seçimleri temizle
-                        document.querySelectorAll('.day.selected').forEach(selectedDay => {
-                            selectedDay.classList.remove('selected');
-                        });
+                    let dayClick = false; // Her gün için local değişken
 
-                        // Yeni seçimi ekle
-                        this.classList.add("selected");
+                    day.addEventListener("click", function(e) {
+                        if (dayClick == false) {
+                            // İlk tıklama - seç
+                            dayClick = true;
+                            this.classList.add("selected");
+                        } else {
+                            // İkinci tıklama - seçimi kaldır
+                            dayClick = false;
+                            this.classList.remove("selected");
+                        }
 
                         // Tarih input'larını güncelle
                         const dateString = this.getAttribute('data-date');
