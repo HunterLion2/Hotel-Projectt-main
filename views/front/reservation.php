@@ -776,6 +776,24 @@
             color: #ccc !important;
             transform: none !important;
         }
+
+        /* Başarılı Rezervasyon İşlemi */
+
+        .succes-reservation-in {
+            border-radius: 15px;
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .succes-reservation {
+            position: absolute;
+            margin: 0;
+            height: 100vh;
+            width: 100vh;
+            background-color: rgba(255, 255, 255, 0.58);
+            z-index: 10000;
+        }
+
     </style>
 </head>
 
@@ -795,6 +813,15 @@
             <h3 class="">Filtreler Kaldırılmıştır</h3>
         </div>
     </div>
+
+    <div class="succes-reservation">
+        <div class="succes-reservation-in p-4">
+            <i class="text-center"></i>
+            <h3 class="text-center">Rezervasyon İşlemi Başarılı</h3>
+            <h5>Rezervasyon Yapanlar</h5>: 
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div class="container-modern">
         <div class="reservation-container">
@@ -1004,8 +1031,8 @@
 
                                                             <form action="/reservation" method="POST">
                                                                 <!-- Yukarıda seçtiğim gün bilgilerini buradaki inputun içerisine yerleştiricem. -->
-                                                                <input class="form-control" type="hidden" name="first-sign" id="" required>
-                                                                <input class="form-control" type="hidden" name="last-sign" id="" required>
+                                                                <input class="form-control first-sign" type="hidden" name="first-sign" id="" required>
+                                                                <input class="form-control last-sign" type="hidden" name="last-sign" id="" required>
 
                                                                 <h5 class="schedule-title mt-3">
                                                                     <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
@@ -1153,7 +1180,9 @@
                             dayClick = true;
                             this.classList.add("selected");
                         } else {
-                            // İkinci tıklama - seçimi kaldır
+
+
+
                             dayClick = false;
                             this.classList.remove("selected");
                         }
