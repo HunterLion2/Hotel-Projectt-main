@@ -38,6 +38,20 @@ class HotelModel
         }
     }
 
+    public function signandlast() {
+        $stmt = $this->db->prepare(
+            "
+                SELECT 
+	                r.`first-sign`,
+                    r.`last-sign`
+                FROM `date-information` r WHERE 1
+            "
+        );
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function capacityRoom($capacity)
     {
         try {

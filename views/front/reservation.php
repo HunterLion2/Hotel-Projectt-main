@@ -793,7 +793,6 @@
             background-color: rgba(255, 255, 255, 0.58);
             z-index: 10000;
         }
-
     </style>
 </head>
 
@@ -814,13 +813,13 @@
         </div>
     </div>
 
-    <div class="succes-reservation">
+    <!-- <div class="succes-reservation">
         <div class="succes-reservation-in p-4">
             <i class="text-center"></i>
             <h3 class="text-center">Rezervasyon İşlemi Başarılı</h3>
             <h5>Rezervasyon Yapanlar</h5>: 
         </div>
-    </div>
+    </div> -->
 
     <!-- Main Content -->
     <div class="container-modern">
@@ -1164,6 +1163,15 @@
                 day.classList.add('day');
                 day.textContent = i;
 
+              // -------- BU BÖLÜME BAK -------
+
+                // const dayspan = day.createElement('span');
+                // daySpan.textContent = i;
+                // day.appendChild(daySpan);
+
+
+            // --------------
+
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 day.setAttribute('data-date', dateString);
 
@@ -1255,13 +1263,54 @@
         renderDayNames();
         renderCalendar();
 
+
+        // Tekvimde Gün Seçme İşlemi
+
+        daysContainer.addEventListener("click", function(e) {
+            if (e.target.classList.contains('day')) {
+                const clickedDay = e.target;
+
+                const dayNumber = clickedDay.textContent;
+
+                const selectedMonth = monthSelect.value; // Seçili ay (0-11)
+                const selectedYear = yearSelect.value; // Seçili yıl
+
+                const dateString = clickedDay.getAttribute('data-date');
+
+                const calendar = [dayNumber, selectedMonth, selectedYear, dateString];
+
+                console.log('Seçilen tarih:', calendar);
+                console.log('Tarih string:', dateString);
+
+                updateCalendarInputs(dateString);
+            }
+        });
+
+        function updateCalendarInputs(dateString) {
+            const firstSignInput = document.querySelector('input[name="first-sign"]');
+            const lastSignInput = document.querySelector('input[name="last-sign"]');
+
+            if (!firstSignInput.value) {
+                firstSignInput.value = dateString;
+            } else if (!lastSignInput.value) {
+                lastSignInput.value = dateString;
+            } else {
+                // İki tarih de doluysa, yeni seçimi başlat
+                firstSignInput.value = dateString;
+                lastSignInput.value = '';
+            }
+        }
+
+
         // Rezervasyon Bölümü Script
 
         document.querySelectorAll('.reservation-button-end').forEach(function(submitBtn) {
             submitBtn.addEventListener('click', function(e) {
                 const form = this.closest('form');
-                const firstSign = form.querySelector('input[name="first-sign"]');
-                const lastSign = form.querySelector('input[name="last-sign"]');
+                // const firstSign = form.querySelector('input[name="first-sign"]');
+                // const lastSign = form.querySelector('input[name="last-sign"]');
+
+
 
                 // Validation
                 if (!firstSign || !firstSign.value) {
