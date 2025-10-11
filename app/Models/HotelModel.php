@@ -42,9 +42,9 @@ class HotelModel
         $stmt = $this->db->prepare(
             "
                 SELECT 
-	                r.`first-sign`,
-                    r.`last-sign`
-                FROM `date-information` r WHERE 1
+	                `first-sign`,
+                    `last-sign`
+                FROM `date-information`  WHERE 1
             "
         );
 

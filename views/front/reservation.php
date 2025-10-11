@@ -1178,7 +1178,8 @@
         </div>
     </div>
 
-    <input type="hidden" value="<?= htmlspecialchars($signouts) ?>" class="first-last-sign-database">
+    <input type="hidden" value="<?= htmlspecialchars($signouts['first-sign']) ?>" class="first-last-sign-database-sign"> <!-- İlk giriş değeri -->
+    <input type="hidden" value="<?= htmlspecialchars($signouts['last-sign']) ?>" class="first-last-sign-database-last"> <!-- Son çıkış değeri -->
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1247,25 +1248,10 @@
                 daysContainer.appendChild(emptyDiv);
             }
 
-            const reservedInput = document.querySelector(".first-last-sign-database");
-            let reservedDates = [];
+            // const reservedInputSıgn = document.querySelector(".first-last-sign-database-sign");
+            // const reservedInputLast = document.querySelector(".first-last-sign-database-last");
+            // let reservedDates = [];
 
-            if (reservedInput && reservedInput.value) {
-                const value = reservedInput.value.trim();
-
-                try {
-                    if (value.startsWith('[') || value.startsWith('{')) {
-                        reservedDates = JSON.parse(value);
-                    } else if (value.includes(',')) {
-                        reservedDates = value.split(',').map(date => date.trim());
-                    } else if (value.length > 0) {
-                        reservedDates = [value];
-                    }
-                } catch (error) {
-                    console.error('Parse hatası:', error);
-                    reservedDates = [];
-                }
-            }
 
             // Günleri oluştur
             for (let i = 1; i <= lastDay; i++) {
@@ -1279,22 +1265,18 @@
 
                 if (dateString < todayString) {
                     day.classList.add('past-date');
-                    day.style.pointerEvents = 'none'; // Tıklanamaz yap
-                } 
-                
-                // ---------- BURADA KALDIM --------
-
-                else if (day.getAttribute('data-date') === document.querySelector(".first-last-sign-database").value) {
-                    day.classList.add("reserved");
                     day.style.pointerEvents = 'none';
+                }
 
-                // ----------------------------
-
-                } else {
+                // ---------- BURADA KALDIM --------
+                // else if (isDateReserved(dateString)) {
+                //     day.classList.add("reserved");
+                //     day.style.pointerEvents = 'none';
+                // } 
+                else {
                     day.addEventListener("click", function(e) {
                         handleDateClick(this, dateString);
                     });
-
 
                     day.addEventListener("mouseenter", function(e) {
                         if (isSelectingRange && firstSelectedDate) {
@@ -1302,15 +1284,11 @@
                         }
                     });
 
-
                     day.addEventListener("mouseleave", function(e) {
                         if (isSelectingRange && firstSelectedDate) {
                             clearRangePreview();
                         }
                     });
-
-
-
                 }
 
                 if (selectedDates.includes(dateString)) {
@@ -1318,6 +1296,50 @@
                 }
                 daysContainer.appendChild(day);
             }
+        }
+
+        function isDateReserved(dateString) {
+            const firstDateInput = document.querySelector(".first-last-sign-database-sign");
+            const lastDateInput = document.querySelector(".first-last-sign-database-last");
+
+            if (!firstDateInput?.value || !lastDateInput?.value) {
+                console.log('Database den gelen değerler boş ')
+                return false;
+            }
+
+            const startDate = firstDateInput.value.trim();
+            const endDate = lastDateInput.value.trim();
+
+            console.log('Start date:', startDate);
+            console.log('End date:', endDate);
+            console.log('Checking date:', dateString);
+
+
+            const reservedRange = getDateRangeForReservation(startDate, endDate);
+            console.log('Reserved range:', reservedRange);
+
+            const isReserved = reservedRange.includes(dateString);
+            console.log(`${dateString} rezerve mi?`, isReserved);
+
+            return reservedRange.includes(dateString);
+        }
+
+        function getDateRangeForReservation(startDate, endDate) {
+            const dates = [];
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            if (start > end) {
+                [start, end] = [end, start];
+            }
+
+            const currentDate = new Date(start);
+            while (currentDate <= end) {
+                dates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return dates;
         }
 
         function handleDateClick(dayElement, dateString) {
@@ -1514,8 +1536,9 @@
 
         daysContainer.addEventListener("click", function(e) {
             if (e.target.classList.contains('day')) {
-
                 const clickedDay = e.target;
+
+
 
                 // const dayNumber = clickedDay.textContent;
 
@@ -1556,7 +1579,10 @@
                 // const firstSign = form.querySelector('input[name="first-sign"]');
                 // const lastSign = form.querySelector('input[name="last-sign"]');
 
-
+                if (isDateReserved(day.getAttribute('data-date'))) {
+                    day.classList.add("reserved");
+                    day.style.pointerEvents = 'none';
+                }
 
                 // Validation
                 if (!firstSign || !firstSign.value) {
