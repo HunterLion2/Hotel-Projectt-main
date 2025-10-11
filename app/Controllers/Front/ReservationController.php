@@ -70,6 +70,20 @@ class ReservationController extends BaseController
 
     }
 
+    public function signandoutinfo() {
+        $signout = [];
+
+        if (isset($this->db)) {
+            $signout = $this->roomModel->signandlast();
+
+            $this->render('/front/reservation', [
+                'signouts' => $signout
+            ]);
+            return;
+        }
+
+    }
+
     public function createReservation()
     {
 

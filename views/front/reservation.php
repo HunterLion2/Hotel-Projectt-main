@@ -770,6 +770,12 @@
             cursor: pointer;
         }
 
+        .hovermouseenter {
+            background: #e8f5e8 !important;
+            color: #2e7d32;
+            cursor: pointer;
+        }
+
         /* Geçmiş tarihler hover'da değişmesin */
         .day.past-date:hover {
             background: #f5f5f5 !important;
@@ -792,6 +798,85 @@
             width: 100vh;
             background-color: rgba(255, 255, 255, 0.58);
             z-index: 10000;
+        }
+
+        /* Seçili tarihler için stiller */
+        .day.selected {
+            background: #4CAF50 !important;
+            color: white !important;
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        /* Aralık başlangıcı */
+        .day.range-start {
+            background: #2E7D32 !important;
+            border-radius: 8px 4px 4px 8px !important;
+        }
+
+        /* Aralık sonu */
+        .day.range-end {
+            background: #2E7D32 !important;
+            border-radius: 4px 8px 8px 4px !important;
+        }
+
+        /* Aralık ortası */
+        .day.range-middle {
+            background: #81C784 !important;
+            border-radius: 0 !important;
+            border-radius: 4px 8px 8px 4px !important;
+        }
+
+        /* Hover preview stilleri */
+        .day.range-preview {
+            background: #C8E6C9 !important;
+            color: #2E7D32 !important;
+            font-weight: 500;
+        }
+
+        .day.range-preview-start {
+            background: #A5D6A7 !important;
+            border-radius: 8px 4px 4px 8px !important;
+        }
+
+        .day.range-preview-end {
+            background: #A5D6A7 !important;
+            border-radius: 4px 8px 8px 4px !important;
+        }
+
+        .day.range-preview-middle {
+            background: #C8E6C9 !important;
+            border-radius: 0 !important;
+            border-radius: 4px 8px 8px 4px !important;
+        }
+
+        /* Geçmiş tarihler için stil */
+        .day.past-date {
+            background: #f5f5f5 !important;
+            color: #ccc !important;
+            cursor: not-allowed !important;
+            opacity: 0.5;
+        }
+
+        /* Bugün için stil */
+        .day.today {
+            background: #ff5722 !important;
+            color: white !important;
+            font-weight: bold;
+            border: 2px solid #e64a19;
+        }
+
+        /* Normal günler için hover */
+        .day:hover:not(.past-date):not(.selected) {
+            background: #e8f5e8 !important;
+            color: #2e7d32;
+            cursor: pointer;
+        }
+
+        .reserved {
+            background: #ffb7c2ff !important;
+            color: #a84532ff;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -1093,6 +1178,8 @@
         </div>
     </div>
 
+    <input type="hidden" value="<?= htmlspecialchars($signouts) ?>" class="first-last-sign-database">
+
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1131,6 +1218,9 @@
             }
         }
 
+        let selectedDates = [];
+        let isSelectingRange = false;
+        let firstSelectedDate = null;
 
         // Takvimi oluştur
         function renderCalendar() {
@@ -1157,51 +1247,207 @@
                 daysContainer.appendChild(emptyDiv);
             }
 
+            const reservedInput = document.querySelector(".first-last-sign-database");
+            let reservedDates = [];
+
+            if (reservedInput && reservedInput.value) {
+                const value = reservedInput.value.trim();
+
+                try {
+                    if (value.startsWith('[') || value.startsWith('{')) {
+                        reservedDates = JSON.parse(value);
+                    } else if (value.includes(',')) {
+                        reservedDates = value.split(',').map(date => date.trim());
+                    } else if (value.length > 0) {
+                        reservedDates = [value];
+                    }
+                } catch (error) {
+                    console.error('Parse hatası:', error);
+                    reservedDates = [];
+                }
+            }
+
             // Günleri oluştur
             for (let i = 1; i <= lastDay; i++) {
                 const day = document.createElement('div');
                 day.classList.add('day');
                 day.textContent = i;
 
-              // -------- BU BÖLÜME BAK -------
-
-                // const dayspan = day.createElement('span');
-                // daySpan.textContent = i;
-                // day.appendChild(daySpan);
-
-
-            // --------------
 
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 day.setAttribute('data-date', dateString);
 
-                // ✅ Geçmiş tarih kontrolü
                 if (dateString < todayString) {
                     day.classList.add('past-date');
                     day.style.pointerEvents = 'none'; // Tıklanamaz yap
+                } 
+                
+                // ---------- BURADA KALDIM --------
+
+                else if (day.getAttribute('data-date') === document.querySelector(".first-last-sign-database").value) {
+                    day.classList.add("reserved");
+                    day.style.pointerEvents = 'none';
+
+                // ----------------------------
+
                 } else {
-                    let dayClick = false; // Her gün için local değişken
-
                     day.addEventListener("click", function(e) {
-                        if (dayClick == false) {
-                            // İlk tıklama - seç
-                            dayClick = true;
-                            this.classList.add("selected");
-                        } else {
-
-
-
-                            dayClick = false;
-                            this.classList.remove("selected");
-                        }
-
-                        // Tarih input'larını güncelle
-                        const dateString = this.getAttribute('data-date');
-                        updateDateInputs(dateString);
+                        handleDateClick(this, dateString);
                     });
+
+
+                    day.addEventListener("mouseenter", function(e) {
+                        if (isSelectingRange && firstSelectedDate) {
+                            showRangePreview(this, dateString);
+                        }
+                    });
+
+
+                    day.addEventListener("mouseleave", function(e) {
+                        if (isSelectingRange && firstSelectedDate) {
+                            clearRangePreview();
+                        }
+                    });
+
+
+
                 }
 
+                if (selectedDates.includes(dateString)) {
+                    day.classList.add('selected');
+                }
                 daysContainer.appendChild(day);
+            }
+        }
+
+        function handleDateClick(dayElement, dateString) {
+            if (!firstSelectedDate) {
+                firstSelectedDate = dateString;
+                isSelectingRange = true;
+
+                clearAllSelections();
+
+                dayElement.classList.add('selected', 'range-start');
+                selectedDates = [dateString];
+
+                console.log('İlk tarih seçildi:', dateString);
+            } else {
+                const endDate = dateString;
+
+                selectedDates = getDateRange(firstSelectedDate, endDate);
+
+                clearAllSelections();
+                markSelectedRange();
+
+                isSelectingRange = false;
+                firstSelectedDate = null;
+
+                console.log('Aralık seçildi:', selectedDates);
+            }
+
+            updateCalendarInputs();
+        }
+
+        function showRangePreview(dayElement, hoverDate) {
+            if (!firstSelectedDate) return;
+
+            clearRangePreview();
+
+            const previewRange = getDateRange(firstSelectedDate, hoverDate);
+
+            previewRange.forEach((date, index) => {
+                const targetDay = document.querySelector(`[data-date="${date}"]`);
+                if (targetDay) {
+                    targetDay.classList.add('range-preview');
+
+                    if (index === 0) {
+                        targetDay.classList.add('range-preview-start');
+                    } else if (index === previewRange.length - 1) {
+                        targetDay.classList.add('range-preview-end');
+                    } else {
+                        targetDay.classList.add('range-preview-middle');
+                    }
+                }
+            });
+        }
+
+        function clearRangePreview() {
+            document.querySelectorAll('.day').forEach(day => {
+                day.classList.remove('range-preview', 'range-preview-start', 'range-preview-end', 'range-preview-middle');
+            });
+        }
+
+        function getDateRange(startDate, endDate) {
+            const dates = [];
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            if (start > end) {
+                [start, end] = [end, start];
+            }
+
+            const currentDate = new Date(start);
+            while (currentDate <= end) {
+                dates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return dates;
+        }
+
+        function clearAllSelections() {
+            document.querySelectorAll('.day').forEach(day => {
+                day.classList.remove('selected', 'range-start', 'range-end', 'range-middle');
+            });
+        }
+
+        function resetDateSelection() {
+            selectedDates = [];
+            firstSelectedDate = null;
+            isSelectingRange = false;
+            clearAllSelections();
+            clearRangePreview();
+            updateCalendarInputs();
+        }
+
+        monthSelect.addEventListener('change', () => {
+            resetDateSelection();
+            date.setMonth(parseInt(monthSelect.value));
+            renderCalendar();
+        });
+
+        yearSelect.addEventListener('change', () => {
+            resetDateSelection();
+            date.setFullYear(parseInt(yearSelect.value));
+            renderCalendar();
+        });
+
+        function markSelectedRange() {
+            selectedDates.forEach((dateString, index) => {
+                const dayElement = document.querySelector(`[data-date="${dateString}"]`);
+                if (dayElement) {
+                    dayElement.classList.add('selected');
+
+                    if (selectedDates.length > 1) {
+                        if (index === 0) {
+                            dayElement.classList.add('range-start');
+                        } else if (index === selectedDates.length - 1) {
+                            dayElement.classList.add('range-end');
+                        } else {
+                            dayElement.classList.add('range-middle');
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCalendarInputs() {
+            const firstSignInput = document.querySelector('input[name="first-sign"]');
+            const lastSignInput = document.querySelector('input[name="last-sign"]');
+
+            if (firstSignInput && lastSignInput) {
+                firstSignInput.value = selectedDates[0] || '';
+                lastSignInput.value = selectedDates[selectedDates.length - 1] || selectedDates[0] || '';
             }
         }
 
@@ -1268,18 +1514,18 @@
 
         daysContainer.addEventListener("click", function(e) {
             if (e.target.classList.contains('day')) {
+
                 const clickedDay = e.target;
 
-                const dayNumber = clickedDay.textContent;
+                // const dayNumber = clickedDay.textContent;
 
-                const selectedMonth = monthSelect.value; // Seçili ay (0-11)
-                const selectedYear = yearSelect.value; // Seçili yıl
+                // const selectedMonth = monthSelect.value; // Seçili ay (0-11)
+                // const selectedYear = yearSelect.value; // Seçili yıl
 
                 const dateString = clickedDay.getAttribute('data-date');
 
-                const calendar = [dayNumber, selectedMonth, selectedYear, dateString];
+                // const calendar = [dayNumber, selectedMonth, selectedYear, dateString];
 
-                console.log('Seçilen tarih:', calendar);
                 console.log('Tarih string:', dateString);
 
                 updateCalendarInputs(dateString);
@@ -1364,7 +1610,7 @@
 
         function generatePersonForm(personnumber) {
             return `
-        <div class="person-form-group mb-4" >
+            <div class="person-form-group mb-4" >
             <div class="number-person">${personnumber}</div>
             <div class="row mb-3">
                 <div class="col-12 col-lg-6">
@@ -1392,32 +1638,15 @@
                     </select>
                 </div>
             </div>
-        </div>
+            </div>
             `;
         }
-
-        // Geri-Gel Butonu İle Bütün Sayfaların Gelmesi
 
         document.querySelectorAll('#come-back-button').forEach(function(comeBackButton) {
             comeBackButton.addEventListener('click', function() {
                 window.location.reload()
             });
         });
-
-        // Filtereleme Metodlarını İptal Etme
-
-        // Buraya yeni bir link oluşturulup eklenicek.
-        // document.querySelector(".filter-close-button").addEventListener("click", function() {
-        //     fetch('ReservationController.php', { // AJAX Yöntemidir.
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             action: 'sil'
-        //         })
-        //     }).then(response => response.json());
-        // })
 
         document.querySelector(".filter-button").addEventListener("click", function(e) {
             e.preventDefault();
@@ -1432,7 +1661,6 @@
             }, 200)
         });
 
-        // Tek Sayfa Gelme Script'i
 
         document.querySelectorAll('.reservation-button').forEach(function(reservationButton) {
 
@@ -1449,8 +1677,6 @@
             });
 
         });
-
-
 
         function hideOtherRooms(selectedRooms) {
             const allRoomCards = document.querySelectorAll('.room-card');
