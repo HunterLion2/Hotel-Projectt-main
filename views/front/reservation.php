@@ -1020,8 +1020,8 @@
                         <!-- Room Cards -->
                         <div class="row">
                             <div class="col-12">
-                                <?php foreach ($rooms as $room): ?>
-                                    <div class="room-card">
+                                <?php foreach ($rooms as $index => $room): ?>
+                                    <div class="room-card" data-room-index="<?= $index ?>">
                                         <!-- Hidden inputs for room data -->
                                         <input type="hidden" class="room-capacity" value="<?= $room['capacity'] ?>">
                                         <input type="hidden" class="room-id" value="<?= $room['id'] ?? '' ?>">
@@ -1080,23 +1080,23 @@
                                                                 <div class="calendar">
                                                                     <div class="calendar-header">
                                                                         <!-- Geri butonu -->
-                                                                        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                                                                        <button id="prevMonth-<?= $index ?>" data-room="<?= $index ?>"><i class="fas fa-chevron-left"></i></button>
                                                                         <!-- Ay ve yıl seçiciler -->
                                                                         <div class="row">
                                                                             <div class="col-6">
-                                                                                <select id="monthSelect" class="form-control"></select>
+                                                                                <select id="monthSelect-<?= $index ?>" class="form-control" data-room="<?= $index ?>"></select>
                                                                             </div>
                                                                             <div class="col-6">
-                                                                                <select id="yearSelect" class="form-control"></select>
+                                                                                <select id="yearSelect-<?= $index ?>" class="form-control" data-room="<?= $index ?>"></select>
                                                                             </div>
                                                                         </div>
                                                                         <!-- İleri butonu -->
-                                                                        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                                                                        <button id="nextMonth-<?= $index ?>>" data-room="<?= $index ?>"><i class="fas fa-chevron-right"></i></button>
                                                                     </div>
                                                                     <!-- Gün isimleri kutuları -->
-                                                                    <div class="calendar-days" id="dayNames"></div>
+                                                                    <div class="calendar-days" id="dayNames-<?= $index ?>"></div>
                                                                     <!-- Gün kutuları -->
-                                                                    <div class="calendar-days" id="days"></div>
+                                                                    <div class="calendar-days" id="days-<?= $index ?>"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="schedule-legend">
@@ -1190,15 +1190,32 @@
         // Haftanın günleri kısaltmaları
         const dayNames = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
 
-        // HTML elementlerini seçiyoruz
-        const dayNamesContainer = document.getElementById('dayNames');
-        const daysContainer = document.getElementById('days');
-        const monthSelect = document.getElementById('monthSelect');
-        const yearSelect = document.getElementById('yearSelect');
-        let date = new Date(); // Mevcut tarih
+        function initRoomCalendar(roomIndex) {
+            const dayNamesContainer = document.getElementById(`dayNames-${roomIndex}`);
+            const daysContainer = document.getElementById(`days-${roomIndex}`);
+            const monthSelect = document.getElementById(`monthSelect-${roomIndex}`);
+            const yearSelect = document.getElementById(`yearSelect-${roomIndex}`);
+
+            if (!dayNamesContainer || !daysContainer || !monthSelect || !yearSelect) {
+                console.warn(`Oda ${roomIndex} için elementler bulunamadı`);
+                return;
+            }
+
+            console.log(`Oda ${roomIndex} takvimi başlatılıyor...`);
+
+            populateSelects(monthSelect, yearSelect);
+            renderDayNames(dayNamesContainer);
+
+            renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect, dayNamesContainer);
+
+            bindEvents(roomIndex, monthSelect, yearSelect, daysContainer);
+        }
 
         // Ay ve yıl seçeneklerini doldur
-        function populateSelects() {
+        function populateSelects(monthSelect, yearSelect) {
+            monthSelect.innerHTML = '';
+            yearSelect.innerHTML = '';
+
             const months = [...Array(12).keys()].map(i => new Date(0, i).toLocaleString('tr-TR', {
                 month: 'long'
             }));
@@ -1224,41 +1241,32 @@
         let firstSelectedDate = null;
 
         // Takvimi oluştur
-        function renderCalendar() {
+        function renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect, dayNamesContainer) {
+            let date = new Date();
+
             date.setDate(1);
             const month = date.getMonth();
             const year = date.getFullYear();
 
-            // Ayın hangi günde başladığını bul
             const firstDayIndex = date.getDay() === 0 ? 6 : date.getDay() - 1;
             const lastDay = new Date(year, month + 1, 0).getDate();
 
-            // Seçicileri güncelle
             monthSelect.value = month;
             yearSelect.value = year;
-
             daysContainer.innerHTML = '';
 
             const today = new Date();
             const todayString = today.toISOString().split('T')[0];
 
-            // Ay başına kadar boş kutular
             for (let i = 0; i < firstDayIndex; i++) {
                 const emptyDiv = document.createElement('div');
-                daysContainer.appendChild(emptyDiv);
+                daysContainer.appendChild(emptyDiv); 
             }
 
-            // const reservedInputSıgn = document.querySelector(".first-last-sign-database-sign");
-            // const reservedInputLast = document.querySelector(".first-last-sign-database-last");
-            // let reservedDates = [];
-
-
-            // Günleri oluştur
             for (let i = 1; i <= lastDay; i++) {
                 const day = document.createElement('div');
                 day.classList.add('day');
                 day.textContent = i;
-
 
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 day.setAttribute('data-date', dateString);
@@ -1266,16 +1274,12 @@
                 if (dateString < todayString) {
                     day.classList.add('past-date');
                     day.style.pointerEvents = 'none';
-                }
-
-                // ---------- BURADA KALDIM --------
-                // else if (isDateReserved(dateString)) {
-                //     day.classList.add("reserved");
-                //     day.style.pointerEvents = 'none';
-                // } 
-                else {
+                } else if (isDateReserved(dateString)) {
+                    day.classList.add("reserved");
+                    day.style.pointerEvents = 'none';
+                } else {
                     day.addEventListener("click", function(e) {
-                        handleDateClick(this, dateString);
+                        handleDateClick(this, dateString, roomIndex);
                     });
 
                     day.addEventListener("mouseenter", function(e) {
@@ -1342,7 +1346,7 @@
             return dates;
         }
 
-        function handleDateClick(dayElement, dateString) {
+        function handleDateClick(dayElement, dateString, roomIndex) {
             if (!firstSelectedDate) {
                 firstSelectedDate = dateString;
                 isSelectingRange = true;
@@ -1367,7 +1371,7 @@
                 console.log('Aralık seçildi:', selectedDates);
             }
 
-            updateCalendarInputs();
+            updateCalendarInputs(roomIndex);
         }
 
         function showRangePreview(dayElement, hoverDate) {
@@ -1432,17 +1436,17 @@
             updateCalendarInputs();
         }
 
-        monthSelect.addEventListener('change', () => {
-            resetDateSelection();
-            date.setMonth(parseInt(monthSelect.value));
-            renderCalendar();
-        });
+        // monthSelect.addEventListener('change', () => {
+        //     resetDateSelection();
+        //     date.setMonth(parseInt(monthSelect.value));
+        //     renderCalendar();
+        // });
 
-        yearSelect.addEventListener('change', () => {
-            resetDateSelection();
-            date.setFullYear(parseInt(yearSelect.value));
-            renderCalendar();
-        });
+        // yearSelect.addEventListener('change', () => {
+        //     resetDateSelection();
+        //     date.setFullYear(parseInt(yearSelect.value));
+        //     renderCalendar();
+        // });
 
         function markSelectedRange() {
             selectedDates.forEach((dateString, index) => {
@@ -1463,7 +1467,8 @@
             });
         }
 
-        function updateCalendarInputs() {
+        function updateCalendarInputs(roomIndex) {
+            const roomCard = document.querySelector(`[data-room-index="${roomIndex}"])`);
             const firstSignInput = document.querySelector('input[name="first-sign"]');
             const lastSignInput = document.querySelector('input[name="last-sign"]');
 
@@ -1493,7 +1498,8 @@
         }
 
         // Gün isimlerini ekle
-        function renderDayNames() {
+        function renderDayNames(dayNamesContainer) {
+            dayNamesContainer.innerHTML = '';
             dayNames.forEach(name => {
                 const div = document.createElement('div');
                 div.classList.add('day-name');
@@ -1502,58 +1508,50 @@
             });
         }
 
-        // Ayı geri al
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            date.setMonth(date.getMonth() - 1);
-            renderCalendar();
-        });
 
-        // Ayı ileri al
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            date.setMonth(date.getMonth() + 1);
-            renderCalendar();
-        });
+        function bindEvents(roomIndex, monthSelect, yearSelect, daysContainer) {
+            let roomDate = new Date();
 
-        // Ay seçimi değiştiğinde takvimi güncelle
-        monthSelect.addEventListener('change', () => {
-            date.setMonth(parseInt(monthSelect.value));
-            renderCalendar();
-        });
+            monthSelect.addEventListener('change', () => {
+                roomDate.setMonth(parseInt(monthSelect.value));
+                renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect);
+            });
 
-        // Yıl seçimi değiştiğinde takvimi güncelle
-        yearSelect.addEventListener('change', () => {
-            date.setFullYear(parseInt(yearSelect.value));
-            renderCalendar();
-        });
+            yearSelect.addEventListener('change', () => {
+                roomDate.setFullYear(parseInt(yearSelect.value));
+                renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect);
+            });
 
-        // İlk çalıştırma işlemleri
-        populateSelects();
-        renderDayNames();
-        renderCalendar();
+            const prevButton = document.getElementById(`prevMonth-${roomIndex}`);
+            const nextButton = document.getElementById(`nextMonth-${roomIndex}`);
 
-
-        // Tekvimde Gün Seçme İşlemi
-
-        daysContainer.addEventListener("click", function(e) {
-            if (e.target.classList.contains('day')) {
-                const clickedDay = e.target;
-
-
-
-                // const dayNumber = clickedDay.textContent;
-
-                // const selectedMonth = monthSelect.value; // Seçili ay (0-11)
-                // const selectedYear = yearSelect.value; // Seçili yıl
-
-                const dateString = clickedDay.getAttribute('data-date');
-
-                // const calendar = [dayNumber, selectedMonth, selectedYear, dateString];
-
-                console.log('Tarih string:', dateString);
-
-                updateCalendarInputs(dateString);
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    roomDate.setMonth(roomDate.getMonth() - 1);
+                    renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect);
+                });
             }
-        });
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    roomDate.setMonth(roomDate.getMonth() + 1);
+                    renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect);
+                });
+            }
+        }
+        // Tekvimde Gün Seçme İşlemi
+        // daysContainer.addEventListener("click", function(e) {
+        //     if (e.target.classList.contains('day')) {
+        //         const clickedDay = e.target;
+        //         // const dayNumber = clickedDay.textContent;
+        //         // const selectedMonth = monthSelect.value; // Seçili ay (0-11)
+        //         // const selectedYear = yearSelect.value; // Seçili yıl
+        //         const dateString = clickedDay.getAttribute('data-date');
+        //         // const calendar = [dayNumber, selectedMonth, selectedYear, dateString];
+        //         console.log('Tarih string:', dateString);
+        //         updateCalendarInputs(dateString);
+        //     }
+        // });
 
         function updateCalendarInputs(dateString) {
             const firstSignInput = document.querySelector('input[name="first-sign"]');
@@ -1750,7 +1748,7 @@
 
         }
 
-        document.querySelectorAll('.reservation-button').forEach(function(button) {
+        document.querySelectorAll('.reservation-button').forEach(function(button, index) {
             button.addEventListener("click", function(e) {
                 e.preventDefault(); // Link tıklamasını engelle
 
@@ -1798,6 +1796,11 @@
 
                     if (currentBigReservation) {
                         currentBigReservation.classList.remove("d-none");
+
+                        setTimeout(() => {
+                            initRoomCalendar(index);
+                        }, 100)
+
                     }
                 }, 500);
 
