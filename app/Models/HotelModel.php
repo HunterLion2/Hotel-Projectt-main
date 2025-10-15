@@ -38,17 +38,18 @@ class HotelModel
         }
     }
 
-    public function signandlast() {
+    public function signandlast($roomid) {
         $stmt = $this->db->prepare(
             "
                 SELECT 
 	                `first-sign`,
                     `last-sign`
-                FROM `date-information`  WHERE 1
+                FROM `date-information` di INNER JOIN `rooms-table` rt ON di.`room_id` = rt.`id`
+                WHERE di.`room_id` = ?
             "
         );
 
-        $stmt->execute();
+        $stmt->execute([$roomid]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

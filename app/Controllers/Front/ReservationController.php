@@ -70,18 +70,35 @@ class ReservationController extends BaseController
 
     }
 
-    public function signandoutinfo() {
+    public function signandoutinfo()
+    {
         $signout = [];
 
-        if (isset($this->db)) {
-            $signout = $this->roomModel->signandlast();
+        try {
+
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            $roomId = $input['room_id'];
+            $reservationData = $this->roomModel->signandlast($roomId);
+
+            if ($reservationData) {
+                echo json_encode([
+                    'success' => true,
+                    'reservation' => $reservationData
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Oda bulunamadı'
+                ]);
+            }
 
             $this->render('/front/reservation', [
-                'signouts' => $signout
+                'signouts' => $reservationData
             ]);
-            return;
-        }
 
+        } catch (Exception $e) {
+        }
     }
 
     public function createReservation()

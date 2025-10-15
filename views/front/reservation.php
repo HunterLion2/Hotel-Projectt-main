@@ -1178,6 +1178,8 @@
         </div>
     </div>
 
+    
+
     <input type="hidden" value="<?= htmlspecialchars($signouts['first-sign']) ?>" class="first-last-sign-database-sign"> <!-- İlk giriş değeri -->
     <input type="hidden" value="<?= htmlspecialchars($signouts['last-sign']) ?>" class="first-last-sign-database-last"> <!-- Son çıkış değeri -->
 
@@ -1738,6 +1740,22 @@
             reservationButton.addEventListener('click', function() {
                 const currentRoomCard = reservationButton.closest('.room-card');
                 const roomTitle = currentRoomCard.querySelector('.room-title').textContent.trim();
+                const roomid = currentRoomCard.querySelector(".room-id").value;
+
+                fetch('/reservation/signandoutinfo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        room_id: roomid
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Room rezervasyon bilgileri:", data);
+                })
+
 
                 hideOtherRooms(currentRoomCard);
 
