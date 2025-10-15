@@ -1091,7 +1091,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <!-- İleri butonu -->
-                                                                        <button id="nextMonth-<?= $index ?>>" data-room="<?= $index ?>"><i class="fas fa-chevron-right"></i></button>
+                                                                        <button id="nextMonth-<?= $index ?>" data-room="<?= $index ?>"><i class="fas fa-chevron-right"></i></button>
                                                                     </div>
                                                                     <!-- Gün isimleri kutuları -->
                                                                     <div class="calendar-days" id="dayNames-<?= $index ?>"></div>
@@ -1219,19 +1219,31 @@
             const months = [...Array(12).keys()].map(i => new Date(0, i).toLocaleString('tr-TR', {
                 month: 'long'
             }));
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
 
             months.forEach((month, index) => {
                 const option = document.createElement('option');
                 option.value = index;
                 option.textContent = month;
+
+                if(index === currentMonth){
+                    option.selected = true;
+                }
+
                 monthSelect.appendChild(option);
             });
 
-            const currentYear = new Date().getFullYear();
             for (let y = currentYear - 5; y <= currentYear + 5; y++) {
                 const option = document.createElement('option');
                 option.value = y;
                 option.textContent = y;
+
+                if(y === currentYear) {
+                    option.selected = true;
+                }
+
                 yearSelect.appendChild(option);
             }
         }
@@ -1242,11 +1254,14 @@
 
         // Takvimi oluştur
         function renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect, dayNamesContainer) {
-            let date = new Date();
 
-            date.setDate(1);
-            const month = date.getMonth();
-            const year = date.getFullYear();
+            const selectedMonth = parseInt(monthSelect.value);
+            const selectedYear = parseInt(yearSelect.value);
+
+            let date = new Date(selectedYear, selectedMonth, 1);
+
+            const month = selectedMonth;
+            const year = selectedYear;
 
             const firstDayIndex = date.getDay() === 0 ? 6 : date.getDay() - 1;
             const lastDay = new Date(year, month + 1, 0).getDate();
@@ -1260,7 +1275,7 @@
 
             for (let i = 0; i < firstDayIndex; i++) {
                 const emptyDiv = document.createElement('div');
-                daysContainer.appendChild(emptyDiv); 
+                daysContainer.appendChild(emptyDiv);
             }
 
             for (let i = 1; i <= lastDay; i++) {
@@ -1527,14 +1542,41 @@
 
             if (prevButton) {
                 prevButton.addEventListener('click', () => {
-                    roomDate.setMonth(roomDate.getMonth() - 1);
+
+                    let currentMonth = parseInt(monthSelect.value);
+                    let currentYear = parseInt(yearSelect.value);
+
+                    currentMonth--;
+
+                    if(currentMonth < 0 ) {
+                        currentMonth = 11;
+                        currentYear--;
+                    }
+
+                    monthSelect.value = currentMonth;
+                    yearSelect.value = currentYear;
+
                     renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect);
                 });
             }
 
             if (nextButton) {
                 nextButton.addEventListener('click', () => {
-                    roomDate.setMonth(roomDate.getMonth() + 1);
+
+                    let currentMonth = parseInt(monthSelect.value);
+                    let currentYear = parseInt(yearSelect.value);
+
+                    currentMonth++;
+
+                    if(currentMonth > 11) {
+                        currentMonth = 0;
+                        currentYear++;
+                    }
+
+                    monthSelect.value = currentMonth;
+                    yearSelect.value = currentYear;
+
+
                     renderCalendar(roomIndex, daysContainer, monthSelect, yearSelect);
                 });
             }
@@ -1554,17 +1596,20 @@
         // });
 
         function updateCalendarInputs(dateString) {
-            const firstSignInput = document.querySelector('input[name="first-sign"]');
-            const lastSignInput = document.querySelector('input[name="last-sign"]');
+            const firstSignInput = roomCard.querySelector('input[name="first-sign"]'); // ✅ Bu odanın input'u
+            const lastSignInput = roomCard.querySelector('input[name="last-sign"]'); // ✅ Bu odanın input'u
 
-            if (!firstSignInput.value) {
-                firstSignInput.value = dateString;
-            } else if (!lastSignInput.value) {
-                lastSignInput.value = dateString;
+            if (firstSignInput && lastSignInput) {
+                firstSignInput.value = selectedDates[0] || '';
+                lastSignInput.value = selectedDates[selectedDates.length - 1] || selectedDates[0] || '';
+
+                console.log(`Oda ${roomIndex} tarihleri güncellendi:`, {
+                    first: firstSignInput.value,
+                    last: lastSignInput.value,
+                    selectedDates: selectedDates
+                });
             } else {
-                // İki tarih de doluysa, yeni seçimi başlat
-                firstSignInput.value = dateString;
-                lastSignInput.value = '';
+                console.warn(`Oda ${roomIndex} için input'lar bulunamadı`);
             }
         }
 
@@ -1574,8 +1619,8 @@
         document.querySelectorAll('.reservation-button-end').forEach(function(submitBtn) {
             submitBtn.addEventListener('click', function(e) {
                 const form = this.closest('form');
-                // const firstSign = form.querySelector('input[name="first-sign"]');
-                // const lastSign = form.querySelector('input[name="last-sign"]');
+                const firstSign = form.querySelector('input[name="first-sign"]');
+                const lastSign = form.querySelector('input[name="last-sign"]');
 
                 if (isDateReserved(day.getAttribute('data-date'))) {
                     day.classList.add("reserved");
