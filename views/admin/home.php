@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <title>Satış Dashboard</title>
 </head>
 
@@ -187,6 +188,11 @@
         color: #ffffffff;
     }
 
+    .render {
+        text-decoration: none;
+        color: black;
+    }
+
 </style>
 
 
@@ -220,12 +226,13 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="stats-card">
+                    <div class="stats-card reservation-details">
                         <div class="stats-icon booking-card">
                             <i class="bi bi-calendar-check"></i>
                         </div>
                         <div class="stats-number"><?= number_format($datas['reservation']) ?></div>
-                        <div class="stats-label">Rezervasyon</div>
+                        <div class="stats-label-reservation animate__animated animate__pulse">Rezervasyon</div>
+                        <div class="stats-label-reservation-details animate__animated animate__bounceIn d-none"><a href="" class="render">Rezervasyon-Detayları</a></div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
@@ -239,12 +246,13 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="stats-card">
+                    <div class="stats-card total-room">
                         <div class="stats-icon rooms-card">
                             <i class="bi bi-house"></i>
                         </div>
                         <div class="stats-number"><?= number_format($datas['totalroom']) ?></div>
-                        <div class="stats-label">Toplam Oda</div>
+                        <div class="stats-label-nothover animate__animated animate__pulse">Toplam Oda</div>
+                        <div class="stats-label-hover animate__animated animate__bounceIn d-none"><a href="" class="render">Oda Detayları</a></div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -288,6 +296,39 @@
     </div>
 
     <script>
+
+        document.querySelector(".reservation-details").addEventListener("mouseenter", function() {
+            const reservation = document.querySelector(".stats-label-reservation");
+            const reservation_hover = document.querySelector(".stats-label-reservation-details");
+
+            reservation.classList.add("d-none");
+            reservation_hover.classList.remove("d-none")
+        });
+
+        document.querySelector(".reservation-details").addEventListener("mouseleave", function() {
+            const reservation = document.querySelector(".stats-label-reservation");
+            const reservation_hover = document.querySelector(".stats-label-reservation-details");
+
+            reservation.classList.remove("d-none");
+            reservation_hover.classList.add("d-none")
+        });
+
+        document.querySelector(".total-room").addEventListener("mouseenter", function() {
+            const label_none = document.querySelector(".stats-label-nothover");
+            const label_none_hover = document.querySelector(".stats-label-hover");
+
+            label_none_hover.classList.remove("d-none"); // Hover label'ı göster
+            label_none.classList.add("d-none"); // Normal label'ı gizle
+        });
+
+        document.querySelector(".total-room").addEventListener("mouseleave", function() {
+            const label_none_hover = document.querySelector(".stats-label-hover");
+            const label_none = document.querySelector(".stats-label-nothover");
+
+            label_none_hover.classList.add("d-none"); // Hover label'ı gizle
+            label_none.classList.remove("d-none"); // Normal label'ı göster
+        });
+
         // Satış verileri
         const salesData = {
             monthly: {
@@ -384,16 +425,16 @@
         });
 
         // Dinamik güncelleme - Her 5 saniyede değişim
-        setInterval(() => {
-            // Rastgele değişim simülasyonu
-            salesData.monthly.data = salesData.monthly.data.map(val =>
-                Math.max(5, val + Math.floor(Math.random() * 10) - 5)
-            );
+        // setInterval(() => {
+        //     // Rastgele değişim simülasyonu
+        //     salesData.monthly.data = salesData.monthly.data.map(val =>
+        //         Math.max(5, val + Math.floor(Math.random() * 10) - 5)
+        //     );
 
-            // Grafikleri güncelle
-            Chart.getChart('salesChart').data.datasets[0].data = salesData.monthly.data;
-            Chart.getChart('salesChart').update('active');
-        }, 5000);
+        //     // Grafikleri güncelle
+        //     Chart.getChart('salesChart').data.datasets[0].data = salesData.monthly.data;
+        //     Chart.getChart('salesChart').update('active');
+        // }, 5000);
     </script>
 </body>
 

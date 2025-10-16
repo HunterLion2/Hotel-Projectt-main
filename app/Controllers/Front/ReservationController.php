@@ -69,8 +69,17 @@ class ReservationController extends BaseController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->createReservation();
-            return;
+            $uri = $_SERVER['REQUEST_URI'];
+            $uri = parse_url($uri, PHP_URL_PATH);
+
+            if ($uri === '/reservation/signandoutinfo') {
+                return $this->signandoutinfo();
+            }
+
+            if ($uri === '/reservation/getRoomDetails') {
+                return $this->getRoomDetails();
+            }
+            return $this->createReservation();
         }
 
 
@@ -119,7 +128,6 @@ class ReservationController extends BaseController
         $first = $_POST['first-sign'] ?? '';
         $last = $_POST['last-sign'] ?? '';
         $room_id = $_POST['room_id'] ?? ''; // burada ki id değeri sayesinde room-table da ki odalar ile bağlantı kurulabilecek
-
         $persons = $_POST['persons'] ?? [];
 
         if (empty($first) || empty($last)) {

@@ -23,6 +23,10 @@ class AdminModel
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getCalendarTotalReservation() {
+        $reservation = $this->db->prepare("");
+    }
+
     public function getAllRoomCount()
     {
 

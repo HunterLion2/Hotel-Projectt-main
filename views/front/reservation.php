@@ -1122,7 +1122,7 @@
                                                                     <i class="fa-solid fa-user-plus"></i> Rezervasyon Yapıcak Kişiler
                                                                 </h5>
 
-                                                                <input type="hidden" name="room_id" value="<?= $room['id'] ?? '' ?>">
+                                                                <input type="hidden" class="room_idpost" name="room_id" value="<?= $room['id'] ?? '' ?>">
 
                                                                 <div id="person-forms-container" class="person-forms-container">
 
@@ -1379,12 +1379,12 @@
 
                 if (reservedRange.includes(dateString)) {
                     console.log(`✅ Oda ${roomIndex} - ${dateString} REZERVE!`, reservedRange);
-                    return true; 
+                    return true;
                 }
             }
 
             console.log(`❌ Oda ${roomIndex} - ${dateString} müsait`);
-            return false; 
+            return false;
 
         }
 
@@ -1496,17 +1496,7 @@
             updateCalendarInputs();
         }
 
-        // monthSelect.addEventListener('change', () => {
-        //     resetDateSelection();
-        //     date.setMonth(parseInt(monthSelect.value));
-        //     renderCalendar();
-        // });
 
-        // yearSelect.addEventListener('change', () => {
-        //     resetDateSelection();
-        //     date.setFullYear(parseInt(yearSelect.value));
-        //     renderCalendar();
-        // });
 
         function markSelectedRange() {
             selectedDates.forEach((dateString, index) => {
@@ -1626,66 +1616,95 @@
                 });
             }
         }
-        // Tekvimde Gün Seçme İşlemi
-        // daysContainer.addEventListener("click", function(e) {
-        //     if (e.target.classList.contains('day')) {
-        //         const clickedDay = e.target;
-        //         // const dayNumber = clickedDay.textContent;
-        //         // const selectedMonth = monthSelect.value; // Seçili ay (0-11)
-        //         // const selectedYear = yearSelect.value; // Seçili yıl
-        //         const dateString = clickedDay.getAttribute('data-date');
-        //         // const calendar = [dayNumber, selectedMonth, selectedYear, dateString];
-        //         console.log('Tarih string:', dateString);
-        //         updateCalendarInputs(dateString);
-        //     }
-        // });
-
-        // function updateCalendarInputs(dateString) {
-        //     const firstSignInput = roomCard.querySelector('input[name="first-sign"]'); // ✅ Bu odanın input'u
-        //     const lastSignInput = roomCard.querySelector('input[name="last-sign"]'); // ✅ Bu odanın input'u
-
-        //     if (firstSignInput && lastSignInput) {
-        //         firstSignInput.value = selectedDates[0] || '';
-        //         lastSignInput.value = selectedDates[selectedDates.length - 1] || selectedDates[0] || '';
-
-        //         console.log(`Oda ${roomIndex} tarihleri güncellendi:`, {
-        //             first: firstSignInput.value,
-        //             last: lastSignInput.value,
-        //             selectedDates: selectedDates
-        //         });
-        //     } else {
-        //         console.warn(`Oda ${roomIndex} için input'lar bulunamadı`);
-        //     }
-        // }
-
-
-        // Rezervasyon Bölümü Script
 
         document.querySelectorAll('.reservation-button-end').forEach(function(submitBtn) {
             submitBtn.addEventListener('click', function(e) {
                 const form = this.closest('form');
                 const firstSign = form.querySelector('input[name="first-sign"]');
                 const lastSign = form.querySelector('input[name="last-sign"]');
+                const personInputs = form.querySelectorAll('input[required], select[required]');
 
-                // if (isDateReserved(day.getAttribute('data-date'))) {
-                //     day.classList.add("reserved");
-                //     day.style.pointerEvents = 'none';
-                // }
-
-                // Validation
                 if (!firstSign || !firstSign.value) {
                     e.preventDefault();
                     alert('Lütfen giriş tarihini seçin!');
-                    return;
+                    return false;
                 }
 
                 if (!lastSign || !lastSign.value) {
                     e.preventDefault();
                     alert('Lütfen çıkış tarihini seçin!');
-                    return;
+                    return false;
                 }
+
+                let epmtyfields = false;
+
+                personInputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        epmtyfields = true;
+                    }
+                });
+
+                if (epmtyfields) {
+                    e.preventDefault();
+                    alert('Lütfen tüm kişi bilgilerini doldurun!');
+                    return false;
+                }
+                const formData = getPersonsData(form);
+                console.log('✅ Form validation başarılı, POST işlemi başlıyor...');
+                console.log('📋 Form verileri:', {
+                    room_id: form.querySelector('input[name="room_id"]').value,
+                    first_sign: firstSign.value,
+                    last_sign: lastSign.value,
+                    persons: formData.persons,
+                    dates: formData.dates
+                });
+
+                return true;
             });
         });
+
+        function getPersonsData(form) {
+            const persons = [];
+            const personContainers = form.querySelectorAll('.person-form-group');
+
+            const roomCard = form.closest(".room-card");
+            const roomIndex = roomCard ? roomCard.getAttribute('data-room-index') : 0;
+
+            personContainers.forEach((container, index) => {
+                const personNumber = index + 1;
+                const name = container.querySelector(`input[name="persons[${personNumber}][name]"]`)?.value;
+                const surname = container.querySelector(`input[name="persons[${personNumber}][surname]"]`)?.value;
+                const birthday = container.querySelector(`input[name="persons[${personNumber}][birthday]"]`)?.value;
+                const phone = container.querySelector(`input[name="persons[${personNumber}][phone]"]`)?.value;
+                const gender = container.querySelector(`select[name="persons[${personNumber}][gender]"]`)?.value;
+
+                persons.push({
+                    name,
+                    surname,
+                    birthday,
+                    phone,
+                    gender
+                });
+            });
+
+            const firstDate = selectedDates.length > 0 ? selectedDates[0] : '';
+            const lastDate = selectedDates.length > 1 ? selectedDates[selectedDates.length - 1] : selectedDates[0] || '';
+
+            console.log('📅 Seçili tarihler:', {
+                firstDate,
+                lastDate,
+                allSelectedDates: selectedDates,
+                roomIndex: roomIndex
+            });
+
+            return {
+                persons: persons,
+                dates: {
+                    first: firstDate,
+                    last: lastDate
+                }
+            };
+        }
 
         // Filtrelemeyi-Kaldır
 
@@ -1749,6 +1768,7 @@
                         <option value="">Seçiniz</option>
                         <option value="female">Kız</option>
                         <option value="male">Erkek</option>
+                        <option value="male">Çocuk</option>
                     </select>
                 </div>
             </div>
