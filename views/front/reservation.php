@@ -1178,10 +1178,34 @@
         </div>
     </div>
 
-    
+    <?php foreach ($rooms as $roomIndex => $room): ?>
+        <?php
+        // Bu room için signout bilgilerini bul
+        $roomSignouts = [];
+        if (isset($signouts) && is_array($signouts)) {
+            foreach ($signouts as $signout) {
+                if (isset($signout['room_id']) && $signout['room_id'] == $room['id']) {
+                    $roomSignouts[] = $signout;
+                }
+            }
+        }
+        ?>
 
-    <input type="hidden" value="<?= htmlspecialchars($signouts['first-sign']) ?>" class="first-last-sign-database-sign"> <!-- İlk giriş değeri -->
-    <input type="hidden" value="<?= htmlspecialchars($signouts['last-sign']) ?>" class="first-last-sign-database-last"> <!-- Son çıkış değeri -->
+        <?php foreach ($roomSignouts as $signoutIndex => $roomSignout): ?>
+            <input type="hidden"
+                value="<?= htmlspecialchars($roomSignout['last-sign']) ?>"
+                class="first-last-sign-database-last-<?= $roomIndex ?>-<?= $signoutIndex ?>">
+            <input type="hidden"
+                value="<?= htmlspecialchars($roomSignout['first-sign']) ?>"
+                class="first-last-sign-database-sign-<?= $roomIndex ?>-<?= $signoutIndex ?>">
+        <?php endforeach; ?>
+
+        <input type="hidden"
+            value="<?= count($roomSignouts) ?>"
+            class="room-reservations-count-<?= $roomIndex ?>">
+
+    <?php endforeach; ?>
+
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1230,7 +1254,7 @@
                 option.value = index;
                 option.textContent = month;
 
-                if(index === currentMonth){
+                if (index === currentMonth) {
                     option.selected = true;
                 }
 
@@ -1242,7 +1266,7 @@
                 option.value = y;
                 option.textContent = y;
 
-                if(y === currentYear) {
+                if (y === currentYear) {
                     option.selected = true;
                 }
 
@@ -1291,7 +1315,7 @@
                 if (dateString < todayString) {
                     day.classList.add('past-date');
                     day.style.pointerEvents = 'none';
-                } else if (isDateReserved(dateString)) {
+                } else if (isDateReserved(dateString, roomIndex)) {
                     day.classList.add("reserved");
                     day.style.pointerEvents = 'none';
                 } else {
@@ -1319,30 +1343,49 @@
             }
         }
 
-        function isDateReserved(dateString) {
-            const firstDateInput = document.querySelector(".first-last-sign-database-sign");
-            const lastDateInput = document.querySelector(".first-last-sign-database-last");
+        function isDateReserved(dateString, roomIndex) {
+            const reservationCountInput = document.querySelector(`.room-reservations-count-${roomIndex}`);
+            const reservationCount = reservationCountInput ? parseInt(reservationCountInput.value) : 0;
 
-            if (!firstDateInput?.value || !lastDateInput?.value) {
-                console.log('Database den gelen değerler boş ')
+            if (reservationCount === 0) {
+                console.log(`Oda ${roomIndex} için rezervasyon yok`);
                 return false;
             }
 
-            const startDate = firstDateInput.value.trim();
-            const endDate = lastDateInput.value.trim();
+            for (let i = 0; i < reservationCount; i++) {
+                const firstDateInput = document.querySelector(`.first-last-sign-database-sign-${roomIndex}-${i}`);
+                const lastDateInput = document.querySelector(`.first-last-sign-database-last-${roomIndex}-${i}`);
 
-            console.log('Start date:', startDate);
-            console.log('End date:', endDate);
-            console.log('Checking date:', dateString);
+                if (!firstDateInput || !lastDateInput) {
+                    console.warn(`Oda ${roomIndex} rezervasyon ${i} için input'lar bulunamadı`);
+                    continue;
+                }
 
+                if (!firstDateInput.value || !lastDateInput.value) {
+                    console.log(`Oda ${roomIndex} rezervasyon ${i} için tarihler boş`);
+                    continue;
+                }
 
-            const reservedRange = getDateRangeForReservation(startDate, endDate);
-            console.log('Reserved range:', reservedRange);
+                const startDate = firstDateInput.value.trim();
+                const endDate = lastDateInput.value.trim();
 
-            const isReserved = reservedRange.includes(dateString);
-            console.log(`${dateString} rezerve mi?`, isReserved);
+                console.log(`Oda ${roomIndex} rezervasyon ${i}:`, {
+                    startDate,
+                    endDate,
+                    checkingDate: dateString
+                });
 
-            return reservedRange.includes(dateString);
+                const reservedRange = getDateRangeForReservation(startDate, endDate);
+
+                if (reservedRange.includes(dateString)) {
+                    console.log(`✅ Oda ${roomIndex} - ${dateString} REZERVE!`, reservedRange);
+                    return true; 
+                }
+            }
+
+            console.log(`❌ Oda ${roomIndex} - ${dateString} müsait`);
+            return false; 
+
         }
 
         function getDateRangeForReservation(startDate, endDate) {
@@ -1485,7 +1528,7 @@
         }
 
         function updateCalendarInputs(roomIndex) {
-            const roomCard = document.querySelector(`[data-room-index="${roomIndex}"])`);
+            const roomCard = document.querySelector(`[data-room-index="${roomIndex}"]`);
             const firstSignInput = document.querySelector('input[name="first-sign"]');
             const lastSignInput = document.querySelector('input[name="last-sign"]');
 
@@ -1550,7 +1593,7 @@
 
                     currentMonth--;
 
-                    if(currentMonth < 0 ) {
+                    if (currentMonth < 0) {
                         currentMonth = 11;
                         currentYear--;
                     }
@@ -1570,7 +1613,7 @@
 
                     currentMonth++;
 
-                    if(currentMonth > 11) {
+                    if (currentMonth > 11) {
                         currentMonth = 0;
                         currentYear++;
                     }
@@ -1597,23 +1640,23 @@
         //     }
         // });
 
-        function updateCalendarInputs(dateString) {
-            const firstSignInput = roomCard.querySelector('input[name="first-sign"]'); // ✅ Bu odanın input'u
-            const lastSignInput = roomCard.querySelector('input[name="last-sign"]'); // ✅ Bu odanın input'u
+        // function updateCalendarInputs(dateString) {
+        //     const firstSignInput = roomCard.querySelector('input[name="first-sign"]'); // ✅ Bu odanın input'u
+        //     const lastSignInput = roomCard.querySelector('input[name="last-sign"]'); // ✅ Bu odanın input'u
 
-            if (firstSignInput && lastSignInput) {
-                firstSignInput.value = selectedDates[0] || '';
-                lastSignInput.value = selectedDates[selectedDates.length - 1] || selectedDates[0] || '';
+        //     if (firstSignInput && lastSignInput) {
+        //         firstSignInput.value = selectedDates[0] || '';
+        //         lastSignInput.value = selectedDates[selectedDates.length - 1] || selectedDates[0] || '';
 
-                console.log(`Oda ${roomIndex} tarihleri güncellendi:`, {
-                    first: firstSignInput.value,
-                    last: lastSignInput.value,
-                    selectedDates: selectedDates
-                });
-            } else {
-                console.warn(`Oda ${roomIndex} için input'lar bulunamadı`);
-            }
-        }
+        //         console.log(`Oda ${roomIndex} tarihleri güncellendi:`, {
+        //             first: firstSignInput.value,
+        //             last: lastSignInput.value,
+        //             selectedDates: selectedDates
+        //         });
+        //     } else {
+        //         console.warn(`Oda ${roomIndex} için input'lar bulunamadı`);
+        //     }
+        // }
 
 
         // Rezervasyon Bölümü Script
@@ -1624,10 +1667,10 @@
                 const firstSign = form.querySelector('input[name="first-sign"]');
                 const lastSign = form.querySelector('input[name="last-sign"]');
 
-                if (isDateReserved(day.getAttribute('data-date'))) {
-                    day.classList.add("reserved");
-                    day.style.pointerEvents = 'none';
-                }
+                // if (isDateReserved(day.getAttribute('data-date'))) {
+                //     day.classList.add("reserved");
+                //     day.style.pointerEvents = 'none';
+                // }
 
                 // Validation
                 if (!firstSign || !firstSign.value) {
@@ -1743,18 +1786,18 @@
                 const roomid = currentRoomCard.querySelector(".room-id").value;
 
                 fetch('/reservation/signandoutinfo', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        room_id: roomid
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            room_id: roomid
+                        })
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Room rezervasyon bilgileri:", data);
-                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Room rezervasyon bilgileri:", data);
+                    })
 
 
                 hideOtherRooms(currentRoomCard);
@@ -1784,7 +1827,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        room_name: roomTitlex
+                        room_name: roomName
                     })
                 }).then(response => {
                     if (!response.ok) {
@@ -1799,12 +1842,6 @@
                     }
                 })
                 .catch(error => {
-                    // Loading'i kaldır
-                    const loadingSpinner = roomCard.querySelector('.loading-spinner');
-                    if (loadingSpinner) {
-                        loadingSpinner.remove();
-                    }
-
                     console.error('AJAX Hatası:', error);
                     alert('Bir hata oluştu: ' + error.message);
                 });

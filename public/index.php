@@ -6,6 +6,10 @@ use App\Core\Route;
 use App\Middleware\AuthMiddleware;
 use App\Core\BaseController;
 
+Route::add('/reservation', 'Front\ReservationController@createReservation', 'POST');
+Route::add('/reservation/signandoutinfo', 'Front\ReservationController@signandoutinfo', 'POST');
+Route::add('/reservation/getRoomDetails', 'Front\ReservationController@getRoomDetails', 'POST');
+
 Route::add('/', 'Front\HomeController@index');
 Route::add('/reservation', 'Front\ReservationController@index');
 Route::add('/adminhotel','Admin\AdminController@home');

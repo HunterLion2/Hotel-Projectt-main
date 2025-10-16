@@ -22,6 +22,7 @@ class ReservationController extends BaseController
     public function index()
     {
         $rooms = [];
+        $signouts = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (isset($this->db)) {
@@ -48,10 +49,21 @@ class ReservationController extends BaseController
                 } else {
                     $rooms = $this->roomModel->getAllRoom();
                 }
+
+                foreach ($rooms as $room) {
+                    $roomSignouts = $this->roomModel->signandlast($room['id']);
+                    if (!empty($roomSignouts)) {
+                        foreach ($roomSignouts as $signout) {
+                            $signout['room_id'] = $room['id']; // Room ID'yi ekle
+                            $signouts[] = $signout;
+                        }
+                    }
+                }
             }
 
             $this->render('/front/reservation', [
-                'rooms' => $rooms
+                'rooms' => $rooms,
+                'signouts' => $signouts
             ]);
             return;
         }
@@ -72,7 +84,6 @@ class ReservationController extends BaseController
 
     public function signandoutinfo()
     {
-        $signout = [];
 
         try {
 
@@ -92,12 +103,13 @@ class ReservationController extends BaseController
                     'message' => 'Oda bulunamadı'
                 ]);
             }
-
-            $this->render('/front/reservation', [
-                'signouts' => $reservationData
-            ]);
-
         } catch (Exception $e) {
+            error_log("signandoutinfo error: " . $e->getMessage());
+
+            echo json_encode([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ]);
         }
     }
 
