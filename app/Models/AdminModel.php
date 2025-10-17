@@ -54,6 +54,39 @@ class AdminModel
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function MonthAnalyze() {
+        $result = $this->db->prepare("
+        SELECT 
+            MONTH(di.`first-sign`) AS `Month`,
+            COUNT(DISTINCT (DAY(`first-sign`))) AS `ReservationCount`,
+            SUM(rt.price) AS `TotalPrice`
+        FROM `date-information` di
+        INNER JOIN `rooms-table` rt ON di.`room_id` = rt.id
+        GROUP BY MONTH(di.`first-sign`)
+        ORDER BY `Month`
+        ");
+
+        $result->execute();
+
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function MountİnReservation()
+    {
+        $result = $this->db->prepare("
+            SELECT 
+                MONTH(`first-sign`) AS `Month`,
+                COUNT(DISTINCT (DAY(`first-sign`))) AS `OneMountİnReservation`
+            FROM `date-information`
+            GROUP BY MONTH(`first-sign`)
+            ORDER BY `Month`
+        ");
+
+        $result->execute();
+
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function countTotalPrice()
     {
         $result = $this->db->prepare("

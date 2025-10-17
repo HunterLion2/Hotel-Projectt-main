@@ -266,6 +266,10 @@
                     <h3 class="chart-title">
                         <i class="bi bi-graph-up"></i> Aylık Satış Performansı
                     </h3>
+                    <?php foreach ($onemountcounts as $onemountcount): ?>
+                        <input type="hidden" class="reservation_month" name="" value="<?= number_format($onemountcount['Month']) ?>">
+                        <input type="hidden" class="reservation_count" name="" value="<?= number_format($onemountcount['OneMountİnReservation']) ?>">
+                    <?php endforeach; ?>
                     <canvas id="salesChart" width="400" height="200"></canvas>
                 </div>
             </div>
@@ -293,6 +297,10 @@
                     <h3 class="chart-title">
                         <i class="bi bi-bar-chart"></i> Aylık Gelir Analizi
                     </h3>
+                    <?php foreach ($analyzemonths as $analyzemonth): ?>
+                        <input type="hidden" class="analyze_month" name="" value="<?= number_format($analyzemonth['Month']) ?>">
+                        <input type="hidden" class="analyze_total" name="" value="<?= number_format($analyzemonth['TotalPrice']) ?>">
+                    <?php endforeach; ?>
                     <canvas id="revenueChart" width="400" height="200"></canvas>
                 </div>
             </div>
@@ -336,6 +344,34 @@
         let roomNames = [];
         let roomCount = [];
 
+        let mountsaler = [];
+        analyzetotal = new Array(12).fill(0); 
+
+        document.querySelectorAll(".analyze_month").forEach((input, index) => {
+            const monthValue = parseInt(input.value.replace(/,/g, '')); 
+            const totalInput = document.querySelectorAll(".analyze_total")[index];
+            const totalValue = totalInput ? parseInt(totalInput.value.replace(/,/g, '')) : 0;
+
+            if (monthValue >= 1 && monthValue <= 12) {
+                analyzetotal[monthValue - 1] = totalValue; 
+            }
+        });
+
+
+        document.querySelectorAll(".reservation_month").forEach(input => {
+            for (let i = 1; i <= 12; i++) {
+                document.querySelectorAll(".reservation_count").forEach(inputcount => {
+                    if (i == input.value) {
+                        mountsaler.push(inputcount.value);
+                    } else {
+                        mountsaler.push(0);
+                    }
+                });
+                console.log(mountsaler);
+            }
+        });
+
+
         document.querySelectorAll('.room_name').forEach(input => {
             roomNames.push(input.value);
         });
@@ -347,8 +383,8 @@
         const salesData = {
             monthly: {
                 labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
-                data: [12, 19, 15, 25, 22, 30, 35, 32, 28, 24, 18, 16],
-                revenue: [180000, 285000, 225000, 375000, 330000, 450000, 525000, 480000, 420000, 360000, 270000, 240000]
+                data: mountsaler,
+                revenue: analyzetotal
             },
             roomTypes: {
                 labels: roomNames,
