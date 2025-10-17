@@ -192,7 +192,6 @@
         text-decoration: none;
         color: black;
     }
-
 </style>
 
 
@@ -277,6 +276,11 @@
                     <h3 class="chart-title">
                         <i class="bi bi-pie-chart"></i> Oda Türleri
                     </h3>
+                    <?php foreach ($roomcount as $room): ?>
+                        <input type="hidden" class="room_name" name="" value="<?= htmlspecialchars($room['sample_room']) ?>">
+                        <input type="hidden" class="room_count" name="" value="<?= number_format($room['room_count']) ?>">
+                    <?php endforeach; ?>
+
                     <canvas id="roomTypesChart" width="300" height="300"></canvas>
                 </div>
             </div>
@@ -296,7 +300,6 @@
     </div>
 
     <script>
-
         document.querySelector(".reservation-details").addEventListener("mouseenter", function() {
             const reservation = document.querySelector(".stats-label-reservation");
             const reservation_hover = document.querySelector(".stats-label-reservation-details");
@@ -330,6 +333,17 @@
         });
 
         // Satış verileri
+        let roomNames = [];
+        let roomCount = [];
+
+        document.querySelectorAll('.room_name').forEach(input => {
+            roomNames.push(input.value);
+        });
+
+        document.querySelectorAll('.room_count').forEach($input => {
+            roomCount.push(parseInt($input.value));
+        });
+
         const salesData = {
             monthly: {
                 labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
@@ -337,8 +351,8 @@
                 revenue: [180000, 285000, 225000, 375000, 330000, 450000, 525000, 480000, 420000, 360000, 270000, 240000]
             },
             roomTypes: {
-                labels: ['Standart', 'Deluxe', 'Suite', 'Presidential'],
-                data: [45, 30, 20, 5],
+                labels: roomNames,
+                data: roomCount,
                 colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
             }
         };

@@ -27,13 +27,18 @@ class AdminController extends BaseController
     {
 
         $data = [];
+        $roomtypecount = [];
 
         $data = $this->roomModel->countTotalPrice();
+        $roomtypecount = $this->roomModel->getRoomTypeCount();
 
         // header("Location : sign.php");
         // exit; 502 Hatası veriyor buna bakıcam.
 
-        $this->renderAdmin("admin/home", ['data' => $data]);
+        $this->renderAdmin("admin/home", [
+        'data' => $data,
+        'roomcount' => $roomtypecount
+    ]);
     }
 
     public function rooms()

@@ -23,8 +23,25 @@ class AdminModel
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getCalendarTotalReservation() {
+    public function getCalendarTotalReservation()
+    {
         $reservation = $this->db->prepare("");
+    }
+
+    public function getRoomTypeCount()
+    {
+        // İki tane veri gelir room ismi ve ondan kaçtane olduğu gelir.
+        $roomtype = $this->db->prepare("
+            SELECT 
+	            MIN(`room-name`) AS sample_room,
+                COUNT(*) AS room_count
+            FROM `rooms-table`
+            GROUP BY `capacity`
+            ORDER BY room_count DESC;
+        ");
+
+        $roomtype->execute();
+        return $roomtype->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getAllRoomCount()
@@ -37,7 +54,8 @@ class AdminModel
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function countTotalPrice() {
+    public function countTotalPrice()
+    {
         $result = $this->db->prepare("
         SELECT 
 	        COUNT(DISTINCT di.room_id) AS reservation
@@ -49,11 +67,7 @@ class AdminModel
         $result->execute();
 
         return $result->fetchAll(PDO::FETCH_ASSOC);
-
     }
 
-    public function percentTotal() {
-
-    }
-
+    public function percentTotal() {}
 }
