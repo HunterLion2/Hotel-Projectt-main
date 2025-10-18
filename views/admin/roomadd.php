@@ -23,7 +23,7 @@
         --dark-color: #343a40;
         --light-color: #f8f9fa;
         --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
-        --gradient-accent: linear-gradient(135deg, var(--accent-color) 0%, #66bb6a 100%);
+        --gradient-accent: #66bb6a;
         --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.1);
         --shadow-medium: 0 15px 50px rgba(0, 0, 0, 0.15);
     }

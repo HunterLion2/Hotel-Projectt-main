@@ -304,6 +304,17 @@
         z-index: 1;
     }
 
+    .animate-on-load {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .animate-on-load:nth-child(1) { animation-delay: 0.1s; }
+    .animate-on-load:nth-child(2) { animation-delay: 0.2s; }
+    .animate-on-load:nth-child(3) { animation-delay: 0.3s; }
+    .animate-on-load:nth-child(4) { animation-delay: 0.4s; }
+
 </style>
 
 
@@ -332,12 +343,12 @@
     </div>
     </div>
 
-    <div class="container">
+    <div class="container animate__animated animate__fadeIn">
         <!-- İstatistik Kartları -->
         <div class="row">
             <?php foreach ($data as $datas): ?>
 
-                <div class="col-12 col-sm-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 animate-on-load">
                     <div class="stats-card">
                         <div class="stats-icon revenue-card">
                             <i class="bi bi-currency-dollar "></i>
@@ -346,7 +357,7 @@
                         <div class="stats-label">Toplam Gelir</div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 animate-on-load">
                     <div class="stats-card reservation-details">
                         <div class="stats-icon booking-card">
                             <i class="bi bi-calendar-check"></i>
@@ -356,7 +367,7 @@
                         <div class="stats-label-reservation-details animate__animated animate__bounceIn d-none"><a href="/adminhotel/reservation-detail" class="render">Rezervasyon-Detayları</a></div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 animate-on-load">
                     <div class="stats-card text-center">
                         <div class="progress-ring mx-auto" style="--progress: <?= number_format($datas['percenttotal']) ?>">
                             <div class="progress-ring-circle">
@@ -366,7 +377,7 @@
                         <div class="stats-label mt-2">Doluluk Oranı</div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 animate-on-load">
                     <div class="stats-card total-room">
                         <div class="stats-icon rooms-card">
                             <i class="bi bi-house"></i>
@@ -384,7 +395,7 @@
         <div class="row">
             <!-- Aylık Satış -->
             <div class="col-12 col-lg-8">
-                <div class="chart-container">
+                <div class="chart-container animate-on-load">
                     <h3 class="chart-title">
                         <i class="bi bi-graph-up"></i> Aylık Satış Performansı
                     </h3>
@@ -398,7 +409,7 @@
 
             <!-- Oda Türleri -->
             <div class="col-12 col-lg-4">
-                <div class="chart-container">
+                <div class="chart-container animate-on-load">
                     <h3 class="chart-title">
                         <i class="bi bi-pie-chart"></i> Oda Türleri
                     </h3>
@@ -415,7 +426,7 @@
         <!-- Gelir Analizi -->
         <div class="row">
             <div class="col-12">
-                <div class="chart-container">
+                <div class="chart-container animate-on-load">
                     <h3 class="chart-title">
                         <i class="bi bi-bar-chart"></i> Aylık Gelir Analizi
                     </h3>
