@@ -20,18 +20,18 @@
         --warning-color: #ffc107;
         --danger-color: #dc3545;
         --info-color: #17a2b8;
+        --dark-color: #343a40;
+        --light-color: #f8f9fa;
+        --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
+        --gradient-accent: linear-gradient(135deg, var(--accent-color) 0%, #66bb6a 100%);
+        --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 15px 50px rgba(0, 0, 0, 0.15);
     }
 
     body {
         font-family: 'Poppins', sans-serif;
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         min-height: 100vh;
-    }
-
-    .dashboard-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
-        color: white;
-        padding: 1rem 0;
     }
 
     .section-area {
@@ -192,6 +192,118 @@
         text-decoration: none;
         color: black;
     }
+
+    /* Navigation Tabs */
+    .nav-tabs-custom {
+        background: var(--gradient-primary);
+        padding: 0 2rem;
+        border: none;
+        position: relative;
+    }
+
+    .nav-tabs-custom .nav-link {
+        border-radius: 15px 15px 0 0;
+        padding: 15px 25px;
+        margin-right: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-tabs-custom .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .nav-tabs-custom .nav-link:hover::before {
+        left: 100%;
+    }
+
+    .nav-tabs-custom .nav-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .nav-tabs-custom .nav-link.active {
+        background: var(--light-color);
+        color: var(--dark-color);
+        box-shadow: var(--shadow-soft);
+    }
+
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .form-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-tabs-custom {
+            padding: 0 1rem;
+        }
+
+        .nav-tabs-custom .nav-link {
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-modern {
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+
+        /* Header Styles */
+    .dashboard-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 1.5rem 0;
+        box-shadow: var(--shadow-soft);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .dashboard-header h1 {
+        font-weight: 600;
+        font-size: 2rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
 </style>
 
 
@@ -202,11 +314,21 @@
             <h1><i class="bi bi-speedometer2"></i> Satış Dashboard</h1>
         </div>
     </div>
-    <div class="section-area">
-        <a href="/adminhotel" class="room-add-link selected">İstatistikler</a>
-        <a href="/adminhotel/adminhotelrooms" class="room-add-link ">Odalar</a>
-        <a href="/adminhotel/adminhotelroomadd" class="room-add-link">Oda Ekleme</a>
-        <a href="/adminhotel/adminusers" class="room-add-link">Kullanıcılar</a>
+    <div class="nav-tabs-custom">
+        <nav class="nav">
+            <a href="/adminhotel" class="nav-link active">
+                <i class="bi bi-graph-up me-2"></i>İstatistikler
+            </a>
+            <a href="/adminhotel/adminhotelrooms" class="nav-link">
+                <i class="bi bi-door-open me-2"></i>Odalar
+            </a>
+            <a href="/adminhotel/adminhotelroomadd" class="nav-link ">
+                <i class="bi bi-plus-circle me-2"></i>Oda Ekleme
+            </a>
+            <a href="/adminhotel/adminusers" class="nav-link">
+                <i class="bi bi-people me-2"></i>Kullanıcılar
+            </a>
+        </nav>
     </div>
     </div>
 
@@ -231,7 +353,7 @@
                         </div>
                         <div class="stats-number"><?= number_format($datas['reservation']) ?></div>
                         <div class="stats-label-reservation animate__animated animate__pulse">Rezervasyon</div>
-                        <div class="stats-label-reservation-details animate__animated animate__bounceIn d-none"><a href="" class="render">Rezervasyon-Detayları</a></div>
+                        <div class="stats-label-reservation-details animate__animated animate__bounceIn d-none"><a href="/adminhotel/reservation-detail" class="render">Rezervasyon-Detayları</a></div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-3">
@@ -251,7 +373,7 @@
                         </div>
                         <div class="stats-number"><?= number_format($datas['totalroom']) ?></div>
                         <div class="stats-label-nothover animate__animated animate__pulse">Toplam Oda</div>
-                        <div class="stats-label-hover animate__animated animate__bounceIn d-none"><a href="" class="render">Oda Detayları</a></div>
+                        <!-- <div class="stats-label-hover animate__animated animate__bounceIn d-none"><a href="" class="render">Oda Detayları</a></div> -->
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -345,15 +467,15 @@
         let roomCount = [];
 
         let mountsaler = [];
-        analyzetotal = new Array(12).fill(0); 
+        analyzetotal = new Array(12).fill(0);
 
         document.querySelectorAll(".analyze_month").forEach((input, index) => {
-            const monthValue = parseInt(input.value.replace(/,/g, '')); 
+            const monthValue = parseInt(input.value.replace(/,/g, ''));
             const totalInput = document.querySelectorAll(".analyze_total")[index];
             const totalValue = totalInput ? parseInt(totalInput.value.replace(/,/g, '')) : 0;
 
             if (monthValue >= 1 && monthValue <= 12) {
-                analyzetotal[monthValue - 1] = totalValue; 
+                analyzetotal[monthValue - 1] = totalValue;
             }
         });
 
@@ -473,18 +595,6 @@
                 }
             }
         });
-
-        // Dinamik güncelleme - Her 5 saniyede değişim
-        // setInterval(() => {
-        //     // Rastgele değişim simülasyonu
-        //     salesData.monthly.data = salesData.monthly.data.map(val =>
-        //         Math.max(5, val + Math.floor(Math.random() * 10) - 5)
-        //     );
-
-        //     // Grafikleri güncelle
-        //     Chart.getChart('salesChart').data.datasets[0].data = salesData.monthly.data;
-        //     Chart.getChart('salesChart').update('active');
-        // }, 5000);
     </script>
 </body>
 

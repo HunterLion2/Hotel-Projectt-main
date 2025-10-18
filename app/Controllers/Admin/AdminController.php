@@ -23,6 +23,10 @@ class AdminController extends BaseController
         $this->renderAdmin("admin/sign");
     }
 
+    public function reservationdetails() {
+        $this->renderAdmin("admin/reservation-detail");
+    }
+
     public function home()
     {
 
