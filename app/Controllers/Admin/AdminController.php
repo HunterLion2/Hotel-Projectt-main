@@ -29,7 +29,6 @@ class AdminController extends BaseController
 
     public function home()
     {
-
         $data = [];
         $roomtypecount = [];
         $onemountreservationcount = [];
@@ -39,9 +38,6 @@ class AdminController extends BaseController
         $roomtypecount = $this->roomModel->getRoomTypeCount();
         $onemountreservationcount = $this->roomModel->MountİnReservation();
         $monthanalyze = $this->roomModel->MonthAnalyze();
-
-        // header("Location : sign.php");
-        // exit; 502 Hatası veriyor buna bakıcam.
 
         $this->renderAdmin("admin/home", [
         'data' => $data,
@@ -70,5 +66,4 @@ class AdminController extends BaseController
         $this->renderAdmin("admin/users");
     }
 
-    public function Security() {}
 }

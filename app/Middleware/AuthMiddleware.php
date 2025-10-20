@@ -16,9 +16,9 @@ class AuthMiddleware
         }
 
         // Kullanıcı oturumu yoksa giriş sayfasına yönlendir
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login'); // "header() değeri yönlendirme metodur."
-            exit();
-        }
+        // if (!isset($_SESSION['user_id'])) {
+        //     header('Location: /login'); // "header() değeri yönlendirme metodur."
+        //     exit();
+        // }
     }
 }
