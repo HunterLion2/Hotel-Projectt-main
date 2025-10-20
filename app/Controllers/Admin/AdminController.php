@@ -63,7 +63,12 @@ class AdminController extends BaseController
 
     public function Users()
     {
-        $this->renderAdmin("admin/users");
+
+        $users = [];
+
+        $users = $this->roomModel->getAllUser();
+
+        $users = $this->renderAdmin("admin/users", ['users' => $users]);
     }
 
 }

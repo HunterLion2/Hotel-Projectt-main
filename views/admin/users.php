@@ -19,6 +19,12 @@
         --warning-color: #ffc107;
         --danger-color: #dc3545;
         --info-color: #17a2b8;
+        --dark-color: #343a40;
+        --light-color: #f8f9fa;
+        --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #1a3d26 100%);
+        --gradient-accent: #66bb6a;
+        --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 15px 50px rgba(0, 0, 0, 0.15);
     }
 
     body {
@@ -82,7 +88,9 @@
         font-size: 14px;
     }
 
-    .modern-input, .modern-textarea, .modern-select {
+    .modern-input,
+    .modern-textarea,
+    .modern-select {
         border: 2px solid #e9ecef;
         border-radius: 12px;
         padding: 12px 16px;
@@ -92,7 +100,9 @@
         width: 100%;
     }
 
-    .modern-input:focus, .modern-textarea:focus, .modern-select:focus {
+    .modern-input:focus,
+    .modern-textarea:focus,
+    .modern-select:focus {
         border-color: var(--primary-color);
         box-shadow: 0 0 0 0.2rem rgba(47, 83, 54, 0.25);
         background: white;
@@ -204,6 +214,144 @@
         font-size: 1.2rem;
         margin-bottom: 1rem;
     }
+
+    .dashboard-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 1.5rem 0;
+        box-shadow: var(--shadow-soft);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .dashboard-header h1 {
+        font-weight: 600;
+        font-size: 2rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .nav-tabs-custom {
+        background: var(--gradient-primary);
+        padding: 0 2rem;
+        border: none;
+        position: relative;
+    }
+
+    .nav-button {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);     
+        transition: all 0.3s ease;
+    }
+
+    .nav-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        transform: translateY(-2px);        
+    }
+
+    .nav-tabs-custom .nav-link {
+        border-radius: 15px 15px 0 0;
+        padding: 15px 25px;
+        margin-right: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-tabs-custom .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .nav-tabs-custom .nav-link:hover::before {
+        left: 100%;
+    }
+
+    .nav-tabs-custom .nav-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .nav-tabs-custom .nav-link.active {
+        background: var(--light-color);
+        color: var(--dark-color);
+        box-shadow: var(--shadow-soft);
+    }
+
+    .modern-table {
+        margin: 0;
+        border: none;
+        box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+    }
+
+    .modern-table thead th {
+        background: #f4f4f4ff;
+        padding: 1rem;
+        font-weight: 600;
+        color: var(--dark-color);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .modern-table tbody tr {
+        border: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modern-table tbody tr:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%);
+        transform: translateY(-2px);
+    }
+
+    .modern-table tbody tr.selected {
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        border-left: 4px solid var(--success-color);
+    }
+
+    .modern-table tbody td {
+        padding: 1.2rem 1rem;
+        border: none;
+        vertical-align: middle;
+    }
+
+    .button-group {
+        margin-top: 10px;
+        margin-left: 450px;
+    }
+
+    .button-group button {
+        border: none;
+        border-radius: 20px 20px 0px 0px;
+        padding: 10px;
+    }
+
 </style>
 
 <body>
@@ -215,15 +363,60 @@
     </div>
 
     <!-- Navigation -->
-    <div class="section-area">
-        <a href="/adminhotel" class="room-add-link">İstatistikler</a>
-        <a href="/adminhotel/adminhotelrooms" class="room-add-link">Odalar</a>
-        <a href="/adminhotel/adminhotelroomadd" class="room-add-link">Oda Ekleme</a>
-        <a href="/adminhotel/adminusers selected" class="room-add-link">Kullanıcılar</a>
+    <div class="nav-tabs-custom">
+        <nav class="nav">
+            <a href="/adminhotel" class="nav-link">
+                <i class="bi bi-graph-up me-2"></i>İstatistikler
+            </a>
+            <a href="/adminhotel/adminhotelrooms" class="nav-link">
+                <i class="bi bi-door-open me-2"></i>Odalar
+            </a>
+            <a href="/adminhotel/adminhotelroomadd" class="nav-link">
+                <i class="bi bi-plus-circle me-2"></i>Oda Ekleme
+            </a>
+            <a href="/adminhotel/adminusers" class="nav-link active">
+                <i class="bi bi-people me-2"></i>Kullanıcılar
+            </a>
+            <div class="button-group">
+                <button class="nav-button">Düzenleme</button>
+                <button class="nav-button">Silme</button>
+                <button class="nav-button">Ekleme</button>
+            </div>
+
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="mt-5 mx-5">
+            <div class="table-responsive">
+                <table class="table modern-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center"><i class="bi bi-hash"></i>ID</th>
+                            <th class="text-center"><i class="bi bi-person-circle"></i>Kullanıcı Adı</th>
+                            <th class="text-center"><i class="fa-solid fa-key"></i>Password</th>
+                            <th class="text-center"><i class="fa-solid fa-phone"></i>Telephone-Number</th>
+                            <th class="text-center">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationTableBody">
+                        <?php foreach ($users as $user): ?>
+                            <tr>
+                                <th class="text-center"> <?= number_format($user['id']) ?> </th>
+                                <th class="text-center"> <?= htmlspecialchars($user['user']) ?> </th>
+                                <th class="text-center"> <?= htmlentities($user['password']) ?> </th>
+                                <th class="text-center"> <?= htmlentities($user['telephone-number']) ?> </th>
+                                <th class="text-center"> <?= htmlspecialchars($user['Role']) ?> </th>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 
 
-
 </body>
+
 </html>

@@ -77,6 +77,8 @@ class BaseController
 
 
         if (in_array($currentIp, $accessIp, true)) {
+
+            // require_once __DIR__ . "/../../views/sign.php";
             $data['session'] = $_SESSION;
 
             // Verileri kullanılabilir hale getirme

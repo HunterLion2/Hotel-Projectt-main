@@ -44,6 +44,14 @@ class AdminModel
         return $roomtype->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllUser() {
+        $user = $this->db->prepare("
+            SELECT * FROM `user-table` WHERE 1
+        ");
+        $user->execute();
+        return $user->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAllRoomCount()
     {
 
