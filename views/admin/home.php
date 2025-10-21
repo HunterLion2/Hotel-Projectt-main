@@ -275,7 +275,7 @@
         }
     }
 
-        /* Header Styles */
+    /* Header Styles */
     .dashboard-header {
         background: var(--gradient-primary);
         color: white;
@@ -310,11 +310,21 @@
         animation: fadeInUp 0.6s ease forwards;
     }
 
-    .animate-on-load:nth-child(1) { animation-delay: 0.1s; }
-    .animate-on-load:nth-child(2) { animation-delay: 0.2s; }
-    .animate-on-load:nth-child(3) { animation-delay: 0.3s; }
-    .animate-on-load:nth-child(4) { animation-delay: 0.4s; }
+    .animate-on-load:nth-child(1) {
+        animation-delay: 0.1s;
+    }
 
+    .animate-on-load:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .animate-on-load:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .animate-on-load:nth-child(4) {
+        animation-delay: 0.4s;
+    }
 </style>
 
 
@@ -424,11 +434,11 @@
         </div>
 
         <!-- Gelir Analizi -->
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12">
                 <div class="chart-container animate-on-load">
                     <h3 class="chart-title">
-                        <i class="bi bi-bar-chart"></i> Aylık Gelir Analizi
+                        <i class="bi bi-bar-chart"></i> Aylık Gelir Analizi / Kişi Başına Gelen Ortalama Gelir
                     </h3>
                     <?php foreach ($analyzemonths as $analyzemonth): ?>
                         <input type="hidden" class="analyze_month" name="" value="<?= number_format($analyzemonth['Month']) ?>">
@@ -579,17 +589,35 @@
 
         // Bar Chart - Gelir
         new Chart(document.getElementById('revenueChart'), {
-            type: 'bar',
+            // labels: salesData.monthly.labels,
+            // datasets: [{
+            //     label: 'Gelir (₺)',
+            //     data: salesData.monthly.revenue,
+            //     backgroundColor: '#4CAF5080',
+            //     borderColor: '#4CAF50',
+            //     borderWidth: 1,
+            //     borderRadius: 8
+            // }]
+
             data: {
-                labels: salesData.monthly.labels,
                 datasets: [{
+                    type: 'bar',
                     label: 'Gelir (₺)',
                     data: salesData.monthly.revenue,
                     backgroundColor: '#4CAF5080',
                     borderColor: '#4CAF50',
                     borderWidth: 1,
                     borderRadius: 8
-                }]
+                }, {
+                    type: 'line',
+                    label: 'Ort',
+                    backgroundColor: '#ca4c3080',
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    borderColor: '#d03400ff',
+                    data: [50, 50, 50, 50]
+                }],
+                labels: salesData.monthly.labels
             },
             options: {
                 responsive: true,
