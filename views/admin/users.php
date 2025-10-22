@@ -252,14 +252,14 @@
 
     .nav-button {
         background: rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.8);     
+        color: rgba(255, 255, 255, 0.8);
         transition: all 0.3s ease;
     }
 
     .nav-button:hover {
         background: rgba(255, 255, 255, 0.2);
         color: white;
-        transform: translateY(-2px);        
+        transform: translateY(-2px);
     }
 
     .nav-tabs-custom .nav-link {
@@ -352,6 +352,23 @@
         padding: 10px;
     }
 
+    .designed-button {
+        border: none;
+        border: #cdc600ff 1px solid;
+        border-radius: 10px;
+        width: 30px;
+        color: #ffea00ff;
+        background-color: #bfbd22ff;
+    }
+
+    .delete-button {
+        border: none;
+        border: #870202ff 2px solid;
+        border-radius: 10px;
+        width: 30px;
+        color: #ab0000ff;
+        background-color: #ff0000ff;
+    }
 </style>
 
 <body>
@@ -378,11 +395,10 @@
                 <i class="bi bi-people me-2"></i>Kullanıcılar
             </a>
             <div class="button-group">
-                <button class="nav-button">Düzenleme</button>
-                <button class="nav-button">Silme</button>
-                <button class="nav-button">Ekleme</button>
+                <button class="nav-button designed-replaid">Düzenleme</button>
+                <button class="nav-button delete">Silme</button>
+                <button class="nav-button added">Ekleme</button>
             </div>
-
         </nav>
     </div>
 
@@ -392,7 +408,9 @@
                 <table class="table modern-table">
                     <thead>
                         <tr>
-                            <th class="text-center"><i class="bi bi-hash"></i>ID</th>
+                            <th id="designeds" class="text-center d-none"></th>
+                            <th id="delete" class="text-center d-none"></th>
+                            <th class="text-center">ID</th>
                             <th class="text-center"><i class="bi bi-person-circle"></i>Kullanıcı Adı</th>
                             <th class="text-center"><i class="fa-solid fa-key"></i>Password</th>
                             <th class="text-center"><i class="fa-solid fa-phone"></i>Telephone-Number</th>
@@ -402,6 +420,8 @@
                     <tbody id="reservationTableBody">
                         <?php foreach ($users as $user): ?>
                             <tr>
+                                <th id="designed" class="text-center d-none"><button class="designed-button"><i class="fa-solid fa-sliders"></i></button></th>
+                                <th id="deletes" class="text-center d-none"><button class="delete-button"><i class="fa-solid fa-trash-can"></i></button></th>
                                 <th class="text-center"> <?= number_format($user['id']) ?> </th>
                                 <th class="text-center"> <?= htmlspecialchars($user['user']) ?> </th>
                                 <th class="text-center"> <?= htmlentities($user['password']) ?> </th>
@@ -415,6 +435,52 @@
         </div>
     </div>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let restartclickdesign = false;
+            if (!restartclickdesign) {
+                document.querySelector(".designed-replaid").addEventListener("click", function() {
+                    const headerCheckboxes = document.querySelectorAll("#designeds");
+                    headerCheckboxes.forEach(element => {
+                        element.classList.remove("d-none");
+                    });
+
+                    document.querySelectorAll("#designed").forEach(design => {
+                        design.classList.remove("d-none");
+                    })
+                    restartclickdesign = true;
+                });
+            } else {
+                document.querySelector(".designed-replaid").addEventListener("click", function() {
+                    const headerCheckboxes = document.querySelectorAll("#designeds");
+                    headerCheckboxes.forEach(element => {
+                        element.classList.add("d-none");
+                    });
+
+                    document.querySelectorAll("#designed").forEach(design => {
+                        design.classList.add("d-none");
+                    })
+                });
+            }
+        })
+
+
+
+
+
+
+        document.querySelector(".delete").addEventListener("click", function() {
+            const headerCheckboxes = document.querySelectorAll("#delete");
+            headerCheckboxes.forEach(element => {
+                element.classList.remove("d-none");
+            });
+
+            document.querySelectorAll("#deletes").forEach(design => {
+                design.classList.remove("d-none");
+            })
+        });
+    </script>
 
 
 </body>
