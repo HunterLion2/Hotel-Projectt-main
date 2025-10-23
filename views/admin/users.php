@@ -437,36 +437,37 @@
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let restartclickdesign = false;
-            if (!restartclickdesign) {
-                document.querySelector(".designed-replaid").addEventListener("click", function() {
-                    const headerCheckboxes = document.querySelectorAll("#designeds");
-                    headerCheckboxes.forEach(element => {
-                        element.classList.remove("d-none");
-                    });
+        let restartclickdesign;
 
-                    document.querySelectorAll("#designed").forEach(design => {
-                        design.classList.remove("d-none");
-                    })
-                    restartclickdesign = true;
+        document.querySelector(".designed-replaid").addEventListener("click", function() {
+            if (restartclickdesign == true) {
+                const headerCheckboxes = document.querySelectorAll("#designeds");
+                headerCheckboxes.forEach(element => {
+                    element.classList.add("d-none");
                 });
-            } else {
-                document.querySelector(".designed-replaid").addEventListener("click", function() {
-                    const headerCheckboxes = document.querySelectorAll("#designeds");
-                    headerCheckboxes.forEach(element => {
-                        element.classList.add("d-none");
-                    });
 
-                    document.querySelectorAll("#designed").forEach(design => {
-                        design.classList.add("d-none");
-                    })
-                });
+                document.querySelectorAll("#designed").forEach(design => {
+                    design.classList.add("d-none");
+                })
+                restartclickdesign = false
             }
-        })
+        });        
+
+        document.querySelector(".designed-replaid").addEventListener("click", function() {
+            const headerCheckboxes = document.querySelectorAll("#designeds");
+            headerCheckboxes.forEach(element => {
+                element.classList.remove("d-none");
+            });
+
+            document.querySelectorAll("#designed").forEach(design => {
+                design.classList.remove("d-none");
+            })
+            restartclickdesign = true;
+        });
 
 
 
+        
 
 
 

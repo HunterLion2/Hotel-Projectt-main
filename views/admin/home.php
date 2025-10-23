@@ -394,7 +394,7 @@
                         </div>
                         <div class="stats-number"><?= number_format($datas['totalroom']) ?></div>
                         <div class="stats-label-nothover animate__animated animate__pulse">Toplam Oda</div>
-                        <!-- <div class="stats-label-hover animate__animated animate__bounceIn d-none"><a href="" class="render">Oda Detayları</a></div> -->
+                        <div class="stats-label-hover animate__animated animate__bounceIn d-none"><a href="/adminhotel/generalroom-detail" class="render">Oda Detayları</a></div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -444,6 +444,10 @@
                         <input type="hidden" class="analyze_month" name="" value="<?= number_format($analyzemonth['Month']) ?>">
                         <input type="hidden" class="analyze_total" name="" value="<?= number_format($analyzemonth['TotalPrice']) ?>">
                     <?php endforeach; ?>
+                    <?php foreach ($oneperson as $onepersons): ?>
+                        <input type="hidden" class="analyze_person" name="" value="<?= number_format($analyzemonth['Month']) ?>">
+                        <input type="hidden" class="one_person" name="" value="<?= number_format($onepersons['OnePerson']) ?>">
+                    <?php endforeach; ?>
                     <canvas id="revenueChart" width="400" height="200"></canvas>
                 </div>
             </div>
@@ -489,6 +493,17 @@
 
         let mountsaler = [];
         analyzetotal = new Array(12).fill(0);
+        oneanalyzetotal = new Array(12).fill(0);
+
+        document.querySelectorAll(".analyze_person").forEach((input, index) => {
+            const monthValue = parseInt(input.value.replace(/,/g, ''));
+            const totalInput = document.querySelectorAll(".one_person")[index];
+            const totalValue = totalInput ? parseInt(totalInput.value.replace(/,/g, '')) : 0;
+
+            if (monthValue >= 1 && monthValue <= 12) {
+                oneanalyzetotal[monthValue - 1] = totalValue;
+            }
+        });
 
         document.querySelectorAll(".analyze_month").forEach((input, index) => {
             const monthValue = parseInt(input.value.replace(/,/g, ''));
@@ -501,6 +516,7 @@
         });
 
 
+
         document.querySelectorAll(".reservation_month").forEach(input => {
             for (let i = 1; i <= 12; i++) {
                 document.querySelectorAll(".reservation_count").forEach(inputcount => {
@@ -510,7 +526,6 @@
                         mountsaler.push(0);
                     }
                 });
-                console.log(mountsaler);
             }
         });
 
@@ -527,7 +542,8 @@
             monthly: {
                 labels: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
                 data: mountsaler,
-                revenue: analyzetotal
+                revenue: analyzetotal,
+                persone: oneanalyzetotal
             },
             roomTypes: {
                 labels: roomNames,
@@ -611,11 +627,11 @@
                 }, {
                     type: 'line',
                     label: 'Ort',
-                    backgroundColor: '#ca4c3080',
+                    backgroundColor: '#d64b2ca5',
                     borderWidth: 1,
                     borderRadius: 8,
-                    borderColor: '#d03400ff',
-                    data: [50, 50, 50, 50]
+                    borderColor: '#d00000ff',
+                    data: salesData.monthly.persone
                 }],
                 labels: salesData.monthly.labels
             },

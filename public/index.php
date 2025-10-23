@@ -15,6 +15,7 @@ Route::add('/reservation', 'Front\ReservationController@index');
 Route::add('/adminhotel','Admin\AdminController@home');
 Route::add('/adminhotel/adminhotelrooms','Admin\AdminController@rooms');
 Route::add('/adminhotel/reservation-detail','Admin\AdminController@reservationdetails');
+Route::add('/adminhotel/generalroom-detail','Admin\AdminController@generalroomdetail');
 Route::add('/adminhotel/adminhotelroomadd', 'Admin\AdminController@RoomAdd');
 Route::add('/adminhotel/adminusers','Admin\AdminController@Users');
 Route::add('/adminhotel/signin','Admin\AdminController@Sign');

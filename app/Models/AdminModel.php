@@ -95,6 +95,45 @@ class AdminModel
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function allRoomDetail() {
+        $result = $this->db->prepare("
+        
+        SELECT
+        	GROUP_CONCAT(DISTINCT rt.`room-name`) AS RoomNames
+	        ,COUNT(DISTINCT di.room_id) AS Roomİd
+            ,SUM(rt.price) AS sumtotal
+            ,COUNT(di.`id`) AS ReservationTotal
+            ,((SUM(rt.price)) / (COUNT(di.`id`))) AS OnePerson
+            ,MONTH(di.`first-sign`) AS Month
+            ,YEAR(di.`first-sign`) AS Year
+        FROM `date-information` di  INNER JOIN `rooms-table` rt ON di.room_id = rt.id 
+        GROUP BY MONTH(di.`first-sign`), YEAR(di.`first-sign`)
+
+        ");
+
+        $result->execute();
+
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function OnePerson() {
+        $result = $this->db->prepare("
+        SELECT 
+	        COUNT(DISTINCT di.room_id) AS reservation
+            ,SUM(rt.price) AS sumtotal
+            ,COUNT(di.`id`) AS ReservationTotal
+            ,((SUM(rt.price)) / (COUNT(di.`id`))) AS OnePerson
+            ,MONTH(di.`first-sign`) AS Month
+            ,YEAR(di.`first-sign`) AS Year
+        FROM `date-information` di  INNER JOIN `rooms-table` rt ON di.room_id = rt.id 
+        GROUP BY MONTH(di.`first-sign`), YEAR(di.`first-sign`)
+        ");
+
+        $result->execute();
+
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function countTotalPrice()
     {
         $result = $this->db->prepare("

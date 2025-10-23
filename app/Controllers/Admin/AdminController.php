@@ -27,13 +27,19 @@ class AdminController extends BaseController
         $this->renderAdmin("admin/reservation-detail");
     }
 
+    public function generalroomdetail() {
+        $this->renderAdmin("admin/generalroom-detail");
+    }
+
     public function home()
     {
         $data = [];
         $roomtypecount = [];
         $onemountreservationcount = [];
         $monthanalyze = [];
+        $onePerson = [];
 
+        $onePerson = $this->roomModel->OnePerson();
         $data = $this->roomModel->countTotalPrice();
         $roomtypecount = $this->roomModel->getRoomTypeCount();
         $onemountreservationcount = $this->roomModel->MountİnReservation();
@@ -41,6 +47,7 @@ class AdminController extends BaseController
 
         $this->renderAdmin("admin/home", [
         'data' => $data,
+        'oneperson' => $onePerson,
         'roomcount' => $roomtypecount,
         'onemountcounts' => $onemountreservationcount,
         'analyzemonths' => $monthanalyze
